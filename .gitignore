@@ -1,0 +1,18 @@
+# Vercel-koppeling (maakt Vercel zelf opnieuw aan bij een deploy)
+.vercel
+
+# Geheimen: nooit je sleutels in de repo
+.env*
+!.env.example
+
+# Freebuff-projectmarker (hoort alleen op jouw laptop)
+.freebuff/
+
+# Losse plaatjes voor uitleg in de chat, geen onderdeel van de app
+screenshots/
+
+# Rommel van het besturingssysteem
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log

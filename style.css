@@ -1,0 +1,369 @@
+/* ============================================================
+   style.css — HOE DE APP ERUITZIET (kleuren en opmaak)
+   ============================================================ */
+
+/* Huisstijl-kleuren (overal herbruikbaar met var(...)) */
+:root {
+  --navy: #0d1b2a; --navy2: #13263c; --card: #16283f;
+  --blue: #2f8fe8; --blue-dk: #1f7ae0; --line: #22405f;
+  --txt: #eaf2f8; --muted: #93a8bd;
+  --radius: 14px;
+}
+
+/* Basis */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: "Inter", "Segoe UI", sans-serif;
+  background: radial-gradient(1200px 600px at 80% -10%, #1c3355 0%, var(--navy) 55%);
+  color: var(--txt); min-height: 100vh;
+}
+
+/* ---------- Bovenbalk met logo + tabbladen ---------- */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+  padding: 14px 26px; background: rgba(13,27,42,.85);
+  border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 50;
+}
+.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; cursor: pointer; }
+.brand:hover .logo { transform: scale(1.06); }
+.brand .logo { transition: transform .15s; }
+.brand .logo { width: 44px; height: 44px; border-radius: 10px; box-shadow: 0 2px 10px rgba(47,143,232,.35); }
+.brand .ball { font-size: 34px; }
+.brand h1 { font-size: 22px; font-weight: 800; }
+.brand h1 span { color: var(--blue); }
+.brand p { font-size: 11px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+.tabs { display: flex; gap: 8px; }
+.tab {
+  background: transparent; color: var(--muted); border: 1px solid var(--line);
+  padding: 9px 16px; border-radius: 999px; cursor: pointer;
+  font-family: inherit; font-size: 14px; font-weight: 600; transition: .15s;
+}
+.tab:hover { color: var(--txt); border-color: var(--blue); }
+.tab.active { background: var(--blue); color: #06121f; border-color: var(--blue); }
+
+/* ---------- Algemene bouwstenen ---------- */
+.view { display: none; padding: 22px 26px 60px; max-width: 1250px; margin: 0 auto; }
+.view.active { display: block; }
+h2 { margin-bottom: 8px; font-size: 20px; }
+.hint { color: var(--muted); font-size: 12.5px; margin: 6px 0; }
+.hint.center { text-align: center; }
+.btn { font-family: inherit; font-weight: 700; cursor: pointer; border: none; border-radius: 10px; padding: 9px 16px; font-size: 14px; transition: .15s; }
+.btn.primary { background: var(--blue); color: #06121f; }
+.btn.primary:hover { background: var(--blue-dk); }
+.btn.ghost { background: transparent; color: var(--txt); border: 1px solid var(--line); }
+.btn.ghost:hover { border-color: var(--blue); }
+.btn.ghost.small { padding: 6px 10px; font-size: 12px; }
+.btn.wide { width: 100%; }
+input, select {
+  font-family: inherit; font-size: 13.5px; background: var(--navy2); color: var(--txt);
+  border: 1px solid var(--line); border-radius: 10px; padding: 9px 12px; outline: none;
+}
+input:focus, select:focus { border-color: var(--blue); }
+.legend { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip { background: var(--card); border: 1px solid var(--line); padding: 5px 10px; border-radius: 999px; font-size: 12px; color: var(--muted); }
+.hero { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
+.spacer { flex: 1; }
+
+/* ---------- PLANNER: weekweergave ---------- */
+.weekbar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+.weekbar h2 { margin: 0; min-width: 230px; text-align: center; }
+.bibsec { margin-top: 30px; }
+.weekgrid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
+.day {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  min-height: 240px; display: flex; flex-direction: column; transition: .15s;
+}
+.day.drop { border-color: var(--blue); box-shadow: 0 0 0 2px rgba(47,143,232,.35); }
+.day.is-today .dayname { color: var(--blue); }
+.dayhead { padding: 10px 12px; border-bottom: 1px solid var(--line); }
+.dayname { font-size: 14px; }
+.daydate { font-size: 11.5px; color: var(--muted); }
+.daybody { padding: 10px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+
+/* Trainingskaartje op een dag */
+.kaart { background: var(--navy2); border: 1px solid var(--line); border-left: 4px solid var(--blue); border-radius: 10px; padding: 10px 12px; cursor: grab; }
+.kaart:active { cursor: grabbing; }
+.kaart h4 { font-size: 13.5px; margin-bottom: 4px; }
+.kaart .doel, .oefkaart .doel { font-size: 11.5px; color: var(--muted); margin-bottom: 6px; }
+.kaart .mat, .oefkaart .mat, .architem .mat { font-size: 14px; letter-spacing: 2px; }
+
+/* Fase in de training + duur op een kaartje */
+.kmeta { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-top: 6px; }
+.kmeta .fase {
+  font-family: inherit; font-size: 10.5px; font-weight: 700; padding: 2px 6px; border-radius: 6px;
+  background: var(--navy2); border: 1px solid var(--line); color: var(--muted); max-width: 112px;
+}
+.kmeta .fase:focus { border-color: var(--blue); }
+.kmeta .kbtn { padding: 2px 6px; font-size: 11px; }
+/* Kleurstreep links = de fase van de training */
+.kaart[data-fase="Warming-up"] { border-left-color: #f5c542; }
+.kaart[data-fase="Kern"]       { border-left-color: var(--blue); }
+.kaart[data-fase="Partijvorm"] { border-left-color: #22c55e; }
+.kaart[data-fase="Afsluiting"] { border-left-color: #a78bfa; }
+.duur { font-size: 11px; color: var(--muted); white-space: nowrap; }
+.daytot { font-size: 11px; font-weight: 700; color: var(--blue); }
+.kacties, .oacties { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+.kbtn {
+  font-family: inherit; font-size: 11px; font-weight: 600; cursor: pointer;
+  background: transparent; color: var(--muted); border: 1px solid var(--line);
+  border-radius: 7px; padding: 4px 8px;
+}
+.kbtn:hover { color: var(--txt); border-color: var(--blue); }
+.kbtn.done { color: var(--blue); border-color: var(--blue); }
+.kbtn.del:hover { color: #ff9b9e; border-color: #e5484d; }
+
+/* ---------- BIBLIOTHEEK ---------- */
+.oeflist { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; margin-top: 14px; }
+.oefkaart {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 14px; cursor: grab; display: flex; flex-direction: column; gap: 8px; transition: .15s;
+}
+.oefkaart:hover { border-color: var(--blue); }
+.oefkaart h4 { font-size: 15px; }
+.oefkaart .doel { font-size: 12px; }
+.oefkaart .mini { height: 74px; border-radius: 10px; background: #17843c; border: 2px solid #e8f5ec; overflow: hidden; }
+.oefkaart .mini svg { width: 100%; height: 100%; display: block; }
+
+/* ---------- ARCHIEF ---------- */
+.archbar { display: flex; gap: 10px; margin: 12px 0 16px; flex-wrap: wrap; }
+.archbar input { flex: 1; min-width: 220px; }
+.archlist { display: flex; flex-direction: column; gap: 10px; }
+.architem {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 12px 16px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+}
+.architem .badge { font-size: 20px; }
+.architem .info { flex: 1; min-width: 180px; }
+.architem .info strong { display: block; font-size: 14.5px; }
+.architem .info span { font-size: 12px; color: var(--muted); }
+
+/* ---------- TACTIEKBORD ---------- */
+#bord.view { max-width: 1500px; }
+
+/* Bovenaan: titel + naam/doel opslaan (altijd in beeld, niet scrollen) */
+.bordhead { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+.bordhead-tekst { flex: 0 1 260px; }
+.bordhead-tekst h2 { margin-bottom: 4px; }
+.opslaanvak {
+  display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap; flex: 1;
+  min-width: 320px; padding: 12px 14px;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+}
+.opslaanveld { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 150px; }
+.opslaanveld span { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+.opslaanveld input { width: 100%; }
+.opslaanveld-smal { flex: 0 0 108px; min-width: 96px; }   /* duur in minuten */
+.opslaanvak .btn { white-space: nowrap; }
+
+/* Drie kolommen: links spelers + materiaal, midden het veld, rechts de acties */
+.bordwrap {
+  display: grid; grid-template-columns: 282px minmax(0, 1fr) 214px;
+  grid-template-areas: "links veld acties";
+  gap: 18px; align-items: start;
+}
+.toolbox, .acties {
+  display: flex; flex-direction: column; gap: 12px;
+  /* blijft staan terwijl je op het veld werkt; eigen scrollbar als het lang wordt */
+  position: sticky; top: 86px; max-height: calc(100vh - 106px); overflow-y: auto; padding-right: 4px;
+}
+.toolbox { grid-area: links; }
+.acties  { grid-area: acties; }
+.acties .toolgrid { grid-template-columns: 1fr; }   /* één knop per regel */
+.toolbox::-webkit-scrollbar, .acties::-webkit-scrollbar { width: 8px; }
+.toolbox::-webkit-scrollbar-thumb, .acties::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
+.toolgroup {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 12px; display: flex; flex-direction: column; gap: 8px;
+}
+.toolgroup h3, details.toolgroup summary {
+  font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--muted); letter-spacing: 1px;
+}
+.toolgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.tool {
+  display: flex; align-items: center; gap: 8px; background: var(--navy2);
+  border: 1px solid var(--line); color: var(--txt); font-family: inherit;
+  font-size: 12.5px; font-weight: 600; padding: 7px 9px; border-radius: 9px;
+  cursor: pointer; transition: .12s; text-align: left;
+}
+.tool:hover { border-color: var(--blue); }
+.tool.active { background: var(--blue); color: #06121f; border-color: var(--blue); }
+.tool.danger { color: #ff9b9e; }
+.tool.wide { grid-column: 1 / -1; }
+
+/* Kleurstippen onder de pion-knop */
+.pionkleuren { grid-column: 1 / -1; display: flex; gap: 7px; padding: 3px 0 3px 2px; }
+.swatch {
+  width: 22px; height: 22px; padding: 0; border-radius: 50%;
+  background: var(--k); border: 2px solid rgba(255,255,255,.28); cursor: pointer; transition: .12s;
+}
+.swatch:hover { transform: scale(1.12); }
+.swatch.active { border-color: #fff; box-shadow: 0 0 0 2px rgba(47,143,232,.55); }
+.tool[hidden], .toolgroup[hidden] { display: none; }
+.toolbox input { width: 100%; }
+
+/* Materiaal: uitklapbaar kopje */
+details.toolgroup { display: block; }              /* geen flex, anders klapt hij niet dicht */
+details.toolgroup summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
+details.toolgroup summary::-webkit-details-marker { display: none; }
+details.toolgroup summary::after { content: "▾"; font-size: 11px; transition: transform .15s; }
+details.toolgroup[open] summary::after { transform: rotate(180deg); }
+details.toolgroup[open] summary { margin-bottom: 4px; }
+
+/* Kleurblokjes bij de speler-knoppen (de 4 kleuren) */
+.dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
+.dot.rood  { background: #e5484d; }
+.dot.blauw { background: #3b82f6; }
+.dot.geel  { background: #f5c542; }
+.dot.groen { background: #22c55e; }
+
+/* Het veld zelf */
+.pitchwrap { grid-area: veld; min-width: 0; }
+.pitchinfo { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+.pitch {
+  position: relative;
+  background: repeating-linear-gradient(0deg, #1e8c46 0 60px, #1a813f 60px 120px);
+  border: 3px solid #e8f5ec; border-radius: 12px;
+  aspect-ratio: 16 / 10.5; width: 100%; overflow: hidden; user-select: none;
+}
+.pitch #items { position: absolute; inset: 0; }
+.pitch .mid { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,.6); }
+.pitch .circle { position: absolute; left: 50%; top: 50%; width: 90px; height: 90px;
+  border: 2px solid rgba(255,255,255,.75); border-radius: 50%; transform: translate(-50%,-50%); }
+.pitch .goal { position: absolute; left: 50%; transform: translateX(-50%);
+  width: 72px; height: 8px; background: #fff; border: 2px solid #333; border-radius: 2px; }
+.pitch .goal.top { top: 4px; }
+.pitch .goal.bottom { bottom: 4px; }
+
+/* Geplaatste items: spelers, materiaal, lijnen en zones.
+   Maten: speler 26px · pion/vlag/etc 26px · doel 64px (2.5× pion) */
+.item { position: absolute; transform: translate(-50%,-50%); cursor: grab; display: grid; place-items: center; font-size: 22px; line-height: 1; text-shadow: 0 1px 2px rgba(0,0,0,.5); }
+.item:active { cursor: grabbing; }
+.item.speler {
+  width: 26px; height: 26px; border-radius: 50%; border: 2px solid rgba(255,255,255,.9);
+  font-size: 12px; font-weight: 800; color: #fff;
+}
+.item.bal { font-size: 24px; }
+.item.pion, .item.vlag, .item.hoepel, .item.ladder, .item.handschoen { width: 26px; height: 26px; }
+/* Pion = een echt kegeltje, zodat elke kleur klopt (CSS-driehoek) */
+.item.pion {
+  width: 22px; height: 24px; border-radius: 2px;
+  background: var(--kleur, #ff7a1a);
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
+.item.schijf { width: 24px; height: 24px; font-size: 18px; }
+.item.horde { width: 38px; height: 26px; font-size: 26px; }
+.item.rebounder { width: 36px; height: 30px; font-size: 28px; }
+.item.mikdoel { width: 30px; height: 30px; font-size: 26px; }
+.item.keeperpop { width: 26px; height: 34px; font-size: 30px; }
+.item.doel { width: 64px; height: 40px; font-size: 40px; }
+.item.lijn { height: 4px; border-radius: 2px; transform: rotate(0deg); transform-origin: 0 50%; }
+.item.pijl { background: var(--kleur, #ffa94d); }
+/* Pijlpunt aan het einde van een pijl */
+.item.pijl::after {
+  content: ""; position: absolute; right: -9px; top: 50%; transform: translateY(-50%);
+  width: 0; height: 0; border-top: 7px solid transparent; border-bottom: 7px solid transparent;
+  border-left: 12px solid var(--kleur, #ffa94d);
+}
+/* Boog: kromme lijn die je met een vinger uitrolt */
+.item.boog { transform-origin: 0 100%; cursor: grab; }
+.item.boog:active { cursor: grabbing; }
+.item.boog svg { width: 100%; height: 100%; display: block; overflow: visible; }
+/* Cijfer of tekst bij een pijl/lijn (blijft rechtop staan) */
+/* Invoerveldje om een cijfer of tekst bij een pijl te typen */
+.labeledit {
+  position: absolute; transform: translate(-50%, -50%); z-index: 6;
+  width: 120px; text-align: center; font-family: inherit;
+  font-size: 12.5px; font-weight: 700;
+  background: rgba(8,22,36,.96); color: #fff;
+  border: 1.5px solid var(--blue); border-radius: 999px;
+  padding: 3px 9px; outline: none; box-shadow: 0 3px 12px rgba(0,0,0,.5);
+}
+.item.bordlabel {
+  transform: translate(-50%, -50%); pointer-events: none;
+  background: rgba(8,22,36,.92); color: #fff; border: 1px solid rgba(255,255,255,.75);
+  border-radius: 999px; padding: 2px 9px; font-size: 12.5px; font-weight: 800; letter-spacing: .3px;
+  white-space: nowrap; max-width: 150px; overflow: hidden; text-overflow: ellipsis;
+  text-shadow: none; box-shadow: 0 2px 7px rgba(0,0,0,.35);
+}
+.item.zone { background: rgba(126,240,178,.16); border: 2px solid #7ef0b2; border-radius: 6px; transform: none; }
+
+/* Greepje aan het eind van een lijn, boog of zone: daarmee rek je hem langer
+   of draai je hem. Alleen zichtbaar als "Selecteer" actief is. */
+.item .greep {
+  position: absolute; display: none; z-index: 4;
+  width: 15px; height: 15px; border-radius: 50%;
+  background: #fff; border: 2px solid var(--blue);
+  box-shadow: 0 1px 5px rgba(0,0,0,.45); cursor: grab;
+}
+#pitch[data-tool="select"] .item .greep { display: block; }
+.item.lijn .greep { right: 5px; top: 50%; transform: translate(50%, -50%); }
+.item.boog .greep { right: 0; bottom: 0; top: auto; transform: translate(15%, 45%); }
+.item.zone .greep { right: -8px; bottom: -8px; top: auto; transform: none; cursor: nwse-resize; }
+
+/* Op tablet/laptop: het veld vangt de vinger zelf af (niet de pagina laten scrollen) */
+@media (min-width: 521px) { .pitch { touch-action: none; } }
+
+/* Het veld past zich aan de hoogte van je scherm aan, zodat je op een
+   laptop het hele veld ziet zonder te scrollen. De verhouding blijft gelijk. */
+#bord { --veldh: clamp(400px, calc(100vh - 250px), 720px); }
+@media (min-width: 761px) {
+  .pitchinfo, .pitch { width: min(100%, calc(var(--veldh) * 16 / 10.5)); margin-left: auto; margin-right: auto; }
+}
+
+/* ---------- Voet (naam van ons team) ---------- */
+.footer {
+  text-align: center; margin-top: 30px; padding: 22px 20px 30px;
+  border-top: 1px solid var(--line); color: var(--muted); font-size: 13.5px;
+}
+.footer strong { color: var(--blue); }
+
+/* ---------- Tablet / smalle laptop ---------- */
+@media (max-width: 1180px) {
+  .bordwrap { grid-template-columns: 246px minmax(0, 1fr) 198px; }
+  .acties .tool { font-size: 11.5px; padding: 7px 8px; gap: 6px; }
+}
+@media (max-width: 980px) {
+  .weekgrid { grid-template-columns: repeat(2, 1fr); }
+  /* Acties worden een strook boven het veld; spelers en materiaal blijven links */
+  .bordwrap {
+    grid-template-columns: 240px minmax(0, 1fr);
+    grid-template-areas: "acties acties" "links veld";
+  }
+  .toolbox, .acties { position: static; max-height: none; overflow: visible; padding-right: 0; }
+  .acties .toolgrid { grid-template-columns: repeat(auto-fit, minmax(125px, 1fr)); }
+  .acties .tool.wide { grid-column: auto; }
+  .tool { font-size: 12px; padding: 6px 8px; gap: 6px; }
+  .opslaanvak { min-width: 280px; }
+  .opslaanvak .btn { flex: 1 0 100%; }        /* knop netjes op een eigen regel */
+}
+
+/* ---------- Nóg smaller: alles boven het veld ---------- */
+@media (max-width: 760px) {
+  .bordwrap { grid-template-columns: 1fr; grid-template-areas: "acties" "links" "veld"; }
+  .toolbox { flex-direction: row; flex-wrap: wrap; }
+  .zoekvak { flex: 1 0 100%; }
+  .toolgroup { flex: 1; min-width: 230px; }
+}
+
+/* ---------- Telefoon (≤520px): ALLEEN BEKIJKEN ----------
+   Op een telefoon verdwijnen de ontwerp-gereedschappen.
+   Bekijken mag; tekenen en plannen kan op laptop of tablet.
+   De bijbehorende blokkade in de code staat in data.js (isTelefoon). */
+.telefoon-melding {
+  display: none;                          /* op pc/tablet staat hij uit */
+  background: rgba(47,143,232,.12);
+  border: 1px solid var(--blue);
+  color: var(--txt);
+  padding: 9px 12px; border-radius: 10px;
+  margin-bottom: 10px; text-align: center; font-size: 13px;
+}
+@media (max-width: 520px) {
+  .toolbox { display: none; }             /* geen tekengereedschap */
+  .opslaanvak { display: none; }          /* en geen opslaan-formulier */
+  #nieuweOefeningBtn { display: none; }   /* geen ontwerp-knop in de planner */
+  .telefoon-melding { display: block; }   /* wel de uitleg boven het veld */
+  /* Ook de wijzig-knoppen gaan weg: afronden, kopiëren en verwijderen
+     kan op telefoon niet. Alleen "👁 Bekijk" blijft over. */
+  .kbtn[data-a="klaar"], .kbtn[data-a="verwijder"],
+  .kbtn[data-a="kopieer"], .kbtn[data-a="herhaal"] { display: none; }
+}

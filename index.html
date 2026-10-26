@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TrainSmart — Ontwerp. Train. Verbeter.</title>
+
+  <!-- Opmaak staat in een apart bestand -->
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="logo.svg" type="image/svg+xml" />
+</head>
+<body>
+
+  <!-- ============ BOVENBALK: logo + tabbladen ============ -->
+  <header class="topbar">
+    <!-- Klik op het logo = terug naar de homepage (de planner) -->
+    <a class="brand" href="#planner" id="logoLink">
+      <img class="logo" src="logo.svg" alt="TrainSmart logo" />
+      <div>
+        <h1>Train<span>Smart</span></h1>
+        <p>Ontwerp. Train. Verbeter.</p>
+      </div>
+    </a>
+    <nav class="tabs">
+      <button class="tab active" data-tab="planner">📅 Planner</button>
+      <button class="tab" data-tab="bord">✏️ Tactiekbord</button>
+      <button class="tab" data-tab="archief">🗂️ Archief</button>
+    </nav>
+  </header>
+
+  <!-- ============ SCHERM 1: PLANNER (US1) ============ -->
+  <main id="planner" class="view active">
+    <section class="hero">
+      <div>
+        <h2>Planner</h2>
+        <p class="hint">Sleep trainingen naar een dag en plan zo je hele trainingsweek.</p>
+      </div>
+      <button id="nieuweOefeningBtn" class="btn primary">➕ Nieuwe oefening ontwerpen</button>
+    </section>
+
+    <section class="weekbar">
+      <button id="weekPrev" class="btn ghost">‹</button>
+      <h2 id="weekLabel">Week</h2>
+      <button id="weekNext" class="btn ghost">›</button>
+      <button id="weekToday" class="btn ghost small">Deze week</button>
+      <div class="spacer"></div>
+      <div class="legend">
+        <span class="chip">🟡 Hoedje</span>
+        <span class="chip">🔺 Pion</span>
+        <span class="chip">⚽ Bal</span>
+        <span class="chip">🥅 Doel</span>
+      </div>
+    </section>
+
+    <!-- De 7 dagen worden door planner.js ingevuld -->
+    <section id="weekGrid" class="weekgrid"></section>
+
+    <section class="bibsec">
+      <h2>📚 Oefeningenbibliotheek</h2>
+      <p class="hint">Sleep een oefening naar een dag hierboven en kies daar de fase (warming-up, kern, partijvorm, afsluiting). Met “Kopieer” zet je hem meteen in een nieuwe week.</p>
+      <div id="oefList" class="oeflist"></div>
+    </section>
+  </main>
+
+  <!-- ============ SCHERM 2: TACTIEKBORD (US2 + US3) ============ -->
+  <main id="bord" class="view">
+
+    <!-- Bovenaan: naam, doel en opslaan — altijd in beeld -->
+    <section class="bordhead">
+      <div class="bordhead-tekst">
+        <h2>Tactiekbord</h2>
+        <p class="hint">Teken je oefening en sla haar meteen op in de bibliotheek.</p>
+      </div>
+      <div class="opslaanvak">
+        <label class="opslaanveld">
+          <span>Naam</span>
+          <input id="oefNaam" type="text" placeholder="Bijv. Rondo 4 tegen 2" />
+        </label>
+        <label class="opslaanveld">
+          <span>Doel</span>
+          <input id="oefInfo" type="text" placeholder="Bijv. Snel kaatsen onder druk" />
+        </label>
+        <label class="opslaanveld opslaanveld-smal">
+          <span>Duur (min)</span>
+          <input id="oefDuur" type="number" min="1" max="180" step="5" placeholder="15" />
+        </label>
+        <button id="saveOefBtn" class="btn primary">💾 Opslaan in bibliotheek</button>
+      </div>
+    </section>
+
+    <div class="bordwrap">
+
+      <!-- Linkerkant: gereedschap, van boven naar beneden -->
+      <aside class="toolbox">
+        <div class="zoekvak">
+          <input id="zoekTool" type="search" placeholder="🔍 Zoek gereedschap…" aria-label="Zoek gereedschap" />
+        </div>
+        <p id="geenTool" class="hint" hidden>Niets gevonden — probeer een andere naam.</p>
+
+        <!-- 1. Spelers -->
+        <div class="toolgroup">
+          <h3>Spelers</h3>
+          <div class="toolgrid">
+            <button class="tool" data-tool="speler-rood" title="Speler rood"><span class="dot rood"></span>Rood</button>
+            <button class="tool" data-tool="speler-blauw" title="Speler blauw"><span class="dot blauw"></span>Blauw</button>
+            <button class="tool" data-tool="speler-geel" title="Speler geel"><span class="dot geel"></span>Geel</button>
+            <button class="tool" data-tool="speler-groen" title="Speler groen"><span class="dot groen"></span>Groen</button>
+          </div>
+        </div>
+
+        <!-- 2. Materiaal (uitklapbaar, want dat gebruik je minder vaak) -->
+        <details class="toolgroup">
+          <summary>Materiaal</summary>
+          <div class="toolgrid">
+            <button class="tool" data-tool="bal">⚽ Bal</button>
+            <button class="tool" data-tool="hoedje">🟡 Hoedje</button>
+            <button class="tool" data-tool="pion">🔺 Pion</button>
+            <div class="pionkleuren" role="group" aria-label="Kleur van de pion">
+              <button class="swatch active" data-pionkleur="oranje" style="--k:#ff7a1a" title="Oranje pion"></button>
+              <button class="swatch" data-pionkleur="rood" style="--k:#e5484d" title="Rode pion"></button>
+              <button class="swatch" data-pionkleur="blauw" style="--k:#3b82f6" title="Blauwe pion"></button>
+              <button class="swatch" data-pionkleur="geel" style="--k:#f5c542" title="Gele pion"></button>
+              <button class="swatch" data-pionkleur="groen" style="--k:#22c55e" title="Groene pion"></button>
+              <button class="swatch" data-pionkleur="wit" style="--k:#f2f6fb" title="Witte pion"></button>
+            </div>
+            <button class="tool" data-tool="starthoedje">🔶 Starthoedje</button>
+            <button class="tool" data-tool="vlag">🚩 Vlag</button>
+            <button class="tool" data-tool="hoepel">⭕ Hoepel</button>
+            <button class="tool" data-tool="ladder">🪜 Ladder</button>
+            <button class="tool" data-tool="schijf" title="Markeringsschijf">⚪ Schijf</button>
+            <button class="tool" data-tool="horde">🚧 Horde</button>
+            <button class="tool" data-tool="rebounder">🔄 Rebounder</button>
+            <button class="tool" data-tool="mikdoel">🎯 Mikdoel</button>
+            <button class="tool" data-tool="handschoen">🧤 Handschoen</button>
+            <button class="tool" data-tool="keeperpop">🧍 Keeperpop</button>
+            <button class="tool wide" data-tool="doel">🥅 Doel</button>
+          </div>
+        </details>
+      </aside>
+
+      <!-- Rechterkant: het voetbalveld -->
+      <div class="pitchwrap">
+        <!-- Wordt zichtbaar op een telefoon (zie style.css onderaan) -->
+        <p class="telefoon-melding">📱 Alleen bekijken op telefoon — tekenen en plannen doe je op laptop of tablet 💻</p>
+        <div class="pitchinfo">
+          <strong id="bordTitle">Nieuwe oefening ontwerpen</strong>
+          <div class="legend" id="materiaalLijst"></div>
+        </div>
+        <div id="pitch" class="pitch">
+          <!-- Vaste veldmarkering -->
+          <div class="mid"></div>
+          <div class="circle"></div>
+          <div class="goal top"></div>
+          <div class="goal bottom"></div>
+          <!-- Getekende lijnen en geplaatste items (door board.js) -->
+          <div id="items"></div>
+        </div>
+        <p class="hint center">Kies een gereedschap en klik of sleep op het veld (muis of vinger). “Selecteer” verplaatst iets, “🏷️” zet tekst bij een pijl en “🧽” haalt één onderdeel weg. Onder “Pion” kies je de kleur — klik met de pion-tool op een bestaande pion om hem te herkleuren.</p>
+      </div>
+
+      <!-- Rechterkolom: de acties (tekenen, verplaatsen, weghalen) -->
+      <aside class="acties" aria-label="Acties op het veld">
+        <div class="toolgroup">
+          <h3>Acties</h3>
+          <div class="toolgrid">
+            <button class="tool active" data-tool="select">🖱️ Selecteer</button>
+            <button class="tool" data-tool="pijl">🏹 Pijl</button>
+            <button class="tool" data-tool="schot">➡️ Schotlijn</button>
+            <button class="tool" data-tool="dribbel">〰️ Dribbel</button>
+            <button class="tool" data-tool="loop">⤳ Looplijn</button>
+            <button class="tool" data-tool="boog">🌙 Boogloop</button>
+            <button class="tool" data-tool="zone">🔲 Zone</button>
+            <button class="tool" data-tool="undo">↩️ Ongedaan</button>
+            <button class="tool wide" data-tool="label">🏷️ Cijfer of tekst bij een pijl</button>
+            <button class="tool wide danger" data-tool="erase">🧽 Verwijder één onderdeel</button>
+            <button class="tool wide danger" data-tool="leeg">🗑️ Leeg het hele veld</button>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- ============ SCHERM 3: ARCHIEF (US5) ============ -->
+  <main id="archief" class="view">
+    <h2>🗂️ Archief — uitgevoerde trainingen</h2>
+    <div class="archbar">
+      <input id="zoekArchief" type="search" placeholder="🔍 Zoek op naam, doel of datum…" />
+      <select id="filterArchief">
+        <option value="">Alle resultaten</option>
+        <option value="goed">👍 Goed gegaan</option>
+        <option value="matig">😐 Matig</option>
+        <option value="slecht">👎 Zwaar</option>
+      </select>
+    </div>
+    <div id="archList" class="archlist"></div>
+  </main>
+
+  <!-- ============ VOET: wie de app gemaakt heeft ============ -->
+  <footer class="footer">
+    <p>🚀 <strong>Gilde DevOps Solution</strong> — Ahmed & Eliyah </p>
+  </footer>
+
+  <!-- ============ DE SCRIPTS, in de juiste volgorde ============
+       Elk onderdeel van de app heeft zijn eigen bestand:
+       1. data.js     → opslag (het geheugen)
+       2. board.js    → het tactiekbord (tekentool)
+       3. planner.js  → weekplanner + oefeningenbibliotheek
+       4. bord-io.js  → oefeningen opslaan/bekijken
+       5. archief.js  → het archief
+       6. app.js      → start de app + tabbladen               -->
+  <script src="data.js"></script>
+  <script src="board.js"></script>
+  <script src="planner.js"></script>
+  <script src="bord-io.js"></script>
+  <script src="archief.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
