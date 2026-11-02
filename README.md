@@ -20,9 +20,12 @@ Alles werkt offline en je opgeslagen planning blijft bewaard in je browser.
 | `bord-io.js` | Oefeningen opslaan en terug op het bord zetten | US2 + US3 |
 | `archief.js` | Afronden, zoeken, filteren, kopiëren | US5 + US6 |
 | `app.js` | Start de app + de tabbladen | — |
+| `online.js` | Deelt de oefeningen tussen laptop en iPad via Supabase | — |
+| `supabase.sql` | De tabel + beveiligingsregels (één keer in Supabase draaien) | — |
 
 **Laadvolgorde** (staat ook uitgelegd in `index.html`): `data.js` eerst, want de
-rest gebruikt die opslag; `app.js` laatst, want die start alles op.
+rest gebruikt die opslag; `app.js` daarna, want die start alles op; `online.js`
+als laatste, want die vult de app met wat er online staat.
 
 ---
 
@@ -91,15 +94,27 @@ met je vinger.
 De app past zich automatisch aan het scherm aan:
 
 - **Laptop / tablet (breder dan 520px)** — alles: tekenen, plannen, archiveren.
-- **Telefoon (smaller dan 520px)** — **alleen bekijken**: de toolbox en de
-  ontwerp-knop verdwijnen, het veld en de planning zijn alleen te bekijken.
-  Boven het veld staat dan een melding: *"Alleen bekijken op telefoon —
-  tekenen en plannen doe je op laptop of tablet"*.
+  Dit is de normale stand op een iPad (liggend én rechtop).
+- **Smal scherm (smaller dan 520px)** — standaard **alleen bekijken**: de
+  toolbox en de ontwerp-knop verdwijnen. Dat is de telefoon, maar het gebeurt
+  óók op een iPad waar Safari in **Split View** naast een andere app staat.
+  Daarom staat er boven het veld een melding met de knop **✏️ Toch ontwerpen**:
+  één tik en je kunt op dat scherm alsnog oefeningen maken. De app onthoudt
+  die keuze, dus je hoeft het maar één keer te doen (met **👁 Alleen bekijken**
+  zet je het weer uit).
+
+Op een iPad werkt het bord met je vinger: tik een gereedschap aan en tik of
+sleep op het veld. Lang drukken geeft geen "kopieer/opslaan"-menu meer in de
+weg, en de grepen zijn er iets groter zodat je ze met een vinger raakt.
+Een oudere iPad (iPadOS 12, zonder pointer-events) gebruikt automatisch de
+touch-bediening — daar hoef je niets voor in te stellen.
 
 **Hoe het werkt** (makkelijk uit te leggen):
-1. `data.js` heeft één vraag: `isTelefoon()` — *is het scherm smaller dan 520px?*
-2. `board.js` en `planner.js` vragen die vóór elke actie: bij "nee" doen ze niets.
-3. `style.css` (onderaan) verbergt de gereedschappen met een media-query.
+1. `data.js` heeft één vraag: `isTelefoon()` — *is het scherm smaller dan 520px
+   én staat "toch ontwerpen" niet aan?*
+2. `board.js` en `planner.js` vragen die vóór elke actie: bij "ja" doen ze niets.
+3. `style.css` (onderaan) verbergt de gereedschappen met een media-query;
+   `body.ontwerp-klein` zet ze weer aan als je op "Toch ontwerpen" tikt.
 
 ---
 
@@ -112,8 +127,29 @@ De app bewaart drie lijsten in `localStorage` (het geheugen van de browser):
 - `trainsmart_archief` — afgeronde trainingen met resultaat
 
 Bij elke wijziging wordt de lijst opnieuw opgeslagen, dus niets gaat verloren
-als je het tabblad sluit. *Let op:* gegevens staan per browser en per computer —
-kopieer de map gewoon naar een andere PC en begin daar opnieuw.
+als je het tabblad sluit.
+
+## ☁️ Delen tussen laptop en iPad (Supabase)
+
+Dezelfde gegevens gaan ook naar een Supabase-database, zodat je op je iPad
+de oefeningen van je laptop ziet. `online.js` doet dat:
+
+1. Bij het openen haalt het de gedeelde werkruimte op en zet die in de app.
+2. Elke wijziging wordt (na een korte pauze) naar de tabel `werkruimte` gestuurd.
+3. Kom je terug in de app, dan ververst hij zichzelf.
+
+Rechtsboven zie je de stand: **☁️ Online** (groen), **⚠️ Offline** of
+**💾 Alleen dit apparaat**. Zonder internet blijft de app gewoon werken en
+probeert hij het later opnieuw.
+
+**Eenmalig instellen:** draai `supabase.sql` in de SQL Editor van je
+Supabase-project, en vul in `online.js` de `ONLINE_URL` in (Project Settings →
+Data API). De publieke sleutel (`sb_publishable_…`) mag in de code staan; de
+beveiliging zit in de RLS-regels van `supabase.sql`.
+
+*Let op:* het is één gedeelde werkruimte — iedereen met de link ziet en wijzigt
+dezelfde oefeningen. Voor persoonsgegevens of aparte omgevingen per trainer is
+Supabase Auth nodig.
 
 ---
 

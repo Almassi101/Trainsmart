@@ -41,6 +41,17 @@ body {
 .tab:hover { color: var(--txt); border-color: var(--blue); }
 .tab.active { background: var(--blue); color: #06121f; border-color: var(--blue); }
 
+/* Klein lampje rechts in de bovenbalk: staan je gegevens online? (online.js) */
+.online-stand {
+  font-size: 12px; font-weight: 600; padding: 5px 11px; border-radius: 999px;
+  border: 1px solid var(--line); color: var(--muted); background: rgba(22,40,63,.7);
+  white-space: nowrap; cursor: default;
+}
+.online-stand.ok { color: #8ee6a8; border-color: rgba(34,197,94,.55); background: rgba(34,197,94,.12); }
+.online-stand.bezig { color: #bcd7f7; border-color: rgba(47,143,232,.55); background: rgba(47,143,232,.12); }
+.online-stand.fout { color: #ffb4b4; border-color: rgba(229,72,77,.6); background: rgba(229,72,77,.14); }
+.online-stand.uit { opacity: .8; }
+
 /* ---------- Algemene bouwstenen ---------- */
 .view { display: none; padding: 22px 26px 60px; max-width: 1250px; margin: 0 auto; }
 .view.active { display: block; }
@@ -224,6 +235,9 @@ details.toolgroup[open] summary { margin-bottom: 4px; }
   background: repeating-linear-gradient(0deg, #1e8c46 0 60px, #1a813f 60px 120px);
   border: 3px solid #e8f5ec; border-radius: 12px;
   aspect-ratio: 16 / 10.5; width: 100%; overflow: hidden; user-select: none;
+  /* Op een iPad: geen "kopieer/opslaan"-menu of blauw flitsje als je lang op
+     het veld drukt — dat zou het tekenen blokkeren. */
+  -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent;
 }
 .pitch #items { position: absolute; inset: 0; }
 .pitch .mid { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,.6); }
@@ -303,6 +317,14 @@ details.toolgroup[open] summary { margin-bottom: 4px; }
 /* Op tablet/laptop: het veld vangt de vinger zelf af (niet de pagina laten scrollen) */
 @media (min-width: 521px) { .pitch { touch-action: none; } }
 
+/* Vinger in plaats van muis: iets grotere grepen en kleurstippen,
+   zodat je ze op een iPad makkelijk raakt. */
+@media (pointer: coarse) {
+  .item .greep { width: 20px; height: 20px; }
+  .swatch { width: 26px; height: 26px; }
+  .item { -webkit-tap-highlight-color: transparent; }
+}
+
 /* Het veld past zich aan de hoogte van je scherm aan, zodat je op een
    laptop het hele veld ziet zonder te scrollen. De verhouding blijft gelijk. */
 #bord { --veldh: clamp(400px, calc(100vh - 250px), 720px); }
@@ -355,15 +377,30 @@ details.toolgroup[open] summary { margin-bottom: 4px; }
   border: 1px solid var(--blue);
   color: var(--txt);
   padding: 9px 12px; border-radius: 10px;
-  margin-bottom: 10px; text-align: center; font-size: 13px;
+  margin-bottom: 10px; font-size: 13px;
+  align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; text-align: center;
 }
 @media (max-width: 520px) {
   .toolbox { display: none; }             /* geen tekengereedschap */
   .opslaanvak { display: none; }          /* en geen opslaan-formulier */
   #nieuweOefeningBtn { display: none; }   /* geen ontwerp-knop in de planner */
-  .telefoon-melding { display: block; }   /* wel de uitleg boven het veld */
+  .telefoon-melding { display: flex; }    /* wel de uitleg boven het veld */
   /* Ook de wijzig-knoppen gaan weg: afronden, kopiëren en verwijderen
      kan op telefoon niet. Alleen "👁 Bekijk" blijft over. */
   .kbtn[data-a="klaar"], .kbtn[data-a="verwijder"],
   .kbtn[data-a="kopieer"], .kbtn[data-a="herhaal"] { display: none; }
 }
+
+/* ---------- Toch ontwerpen op een smal scherm ----------
+   Een iPad kan smaller dan 520px zijn (Safari Split View naast een andere
+   app). Met de knop in de melding zet je het ontwerpen daar alsnog aan:
+   de klasse `ontwerp-klein` op <body> haalt de blokkade hierboven weg.
+   De code staat in data.js (isTelefoon) en app.js (de knop). */
+body.ontwerp-klein .toolbox { display: flex; }
+body.ontwerp-klein .opslaanvak { display: flex; }
+body.ontwerp-klein #nieuweOefeningBtn { display: inline-block; }
+body.ontwerp-klein .kbtn[data-a="klaar"],
+body.ontwerp-klein .kbtn[data-a="verwijder"],
+body.ontwerp-klein .kbtn[data-a="kopieer"],
+body.ontwerp-klein .kbtn[data-a="herhaal"] { display: inline-block; }
+body.ontwerp-klein .pitch { touch-action: none; }

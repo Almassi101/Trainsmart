@@ -11,6 +11,9 @@
 # Losse plaatjes voor uitleg in de chat, geen onderdeel van de app
 screenshots/
 
+# Bijlagen uit de chat (horen niet in de repo)
+.cloud-attachments/
+
 # Rommel van het besturingssysteem
 .DS_Store
 Thumbs.db

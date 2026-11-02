@@ -26,6 +26,8 @@
       <button class="tab" data-tab="bord">✏️ Tactiekbord</button>
       <button class="tab" data-tab="archief">🗂️ Archief</button>
     </nav>
+    <!-- Laat zien of je gegevens met Supabase worden gedeeld (online.js) -->
+    <span id="onlineStand" class="online-stand uit">☁️ Online</span>
   </header>
 
   <!-- ============ SCHERM 1: PLANNER (US1) ============ -->
@@ -140,8 +142,13 @@
 
       <!-- Rechterkant: het voetbalveld -->
       <div class="pitchwrap">
-        <!-- Wordt zichtbaar op een telefoon (zie style.css onderaan) -->
-        <p class="telefoon-melding">📱 Alleen bekijken op telefoon — tekenen en plannen doe je op laptop of tablet 💻</p>
+        <!-- Wordt zichtbaar op een telefoon of een smal venster (zie style.css onderaan).
+             Met de knop erin kun je alsnog ontwerpen, bijvoorbeeld op een iPad
+             die te smal is omdat er een andere app naast openstaat. -->
+        <div class="telefoon-melding">
+          <span id="kleinMeldingTekst">📱 Alleen bekijken op een smal scherm — tekenen en plannen doe je op laptop of tablet 💻</span>
+          <button id="ontwerpKleinBtn" class="btn ghost small" type="button">✏️ Toch ontwerpen</button>
+        </div>
         <div class="pitchinfo">
           <strong id="bordTitle">Nieuwe oefening ontwerpen</strong>
           <div class="legend" id="materiaalLijst"></div>
@@ -208,12 +215,17 @@
        3. planner.js  → weekplanner + oefeningenbibliotheek
        4. bord-io.js  → oefeningen opslaan/bekijken
        5. archief.js  → het archief
-       6. app.js      → start de app + tabbladen               -->
+       6. app.js      → start de app + tabbladen
+       7. online.js   → dezelfde gegevens op laptop en iPad (Supabase) -->
+
+  <!-- Supabase-bibliotheek (voor het delen tussen apparaten) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="data.js"></script>
   <script src="board.js"></script>
   <script src="planner.js"></script>
   <script src="bord-io.js"></script>
   <script src="archief.js"></script>
   <script src="app.js"></script>
+  <script src="online.js"></script>
 </body>
 </html>

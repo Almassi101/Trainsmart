@@ -19,6 +19,23 @@ document.getElementById("logoLink").addEventListener("click", e => {
   wisselTab("planner");
 });
 
+/* Klein scherm (telefoon of iPad in Split View): knop om tóch te ontwerpen.
+   Zonder deze knop zou je op zo'n smal scherm alleen kunnen kijken. */
+const ontwerpKleinBtn = document.getElementById("ontwerpKleinBtn");
+function toonKleinStand() {
+  const aan = ontwerpKleinAan();
+  ontwerpKleinBtn.textContent = aan ? "👁 Alleen bekijken" : "✏️ Toch ontwerpen";
+  document.getElementById("kleinMeldingTekst").textContent = aan
+    ? "✏️ Ontwerpen staat aan voor dit scherm — kies links een gereedschap en tik op het veld."
+    : "📱 Alleen bekijken op een smal scherm — tik op “Toch ontwerpen” om hier toch te tekenen.";
+}
+ontwerpKleinBtn.addEventListener("click", () => {
+  zetOntwerpKlein(!ontwerpKleinAan());
+  toonKleinStand();
+  renderBord();
+});
+toonKleinStand();
+
 /* Start! Alles tekenen bj het openen van de app */
 renderPlanner();
 renderBibliotheek();

@@ -164,14 +164,19 @@ function vraagLabel(it) {
   veld.addEventListener("blur", () => sluit(true));
 }
 
+/* Waar is het punt van deze gebeurtenis? Pointer-events zetten de
+   coördinaten op de gebeurtenis zelf, touch-events bewaren ze in
+   changedTouches/touches. Zo werkt één en dezelfde code voor beide. */
+const puntVan = e => e.changedTouches?.[0] || e.touches?.[0] || e;
+
 /* Starten: vinger of muis indrukken op het veld */
-PITCH.addEventListener("pointerdown", e => {
-  if (isTelefoon()) return;                          // telefoon = alleen bekijken
+function startOp(e) {
+  if (isTelefoon()) return;                          // smal scherm = alleen bekijken
   if (e.pointerType === "mouse" && e.button !== 0) return;
   if (e.target.closest(".labeledit")) return;         // je bent een cijfer/tekst aan het typen
   if (bewaarLabel) { bewaarLabel(); return; }         // eerst het open tekstveld netjes afsluiten
   e.preventDefault();                                // geen tekst selecteren / pagina schuiven
-  const p = muisPos(e);
+  const p = muisPos(puntVan(e));
   const raak = e.target.closest(".item");
   const bestaand = raak ? bord[+raak.dataset.index] : null;
 
@@ -233,17 +238,17 @@ PITCH.addEventListener("pointerdown", e => {
   greep = { it: nieuw, start: { x: p.x, y: p.y },
             soort: nieuw.type === "zone" ? "zone" : nieuw.type === "boog" ? "boog" : isLijn(nieuw) ? "lijn" : "sleep" };
   renderBord();
-});
+}
 
 /* Slepen: speler verplaatsen, lijn/pijl uitrollen, boog groter maken of zone op maat trekken */
-window.addEventListener("pointermove", e => {
+function beweegOp(e) {
   if (!greep) return;
   if (e.cancelable) e.preventDefault();
   if (!greep.verplaatst) {                           // eerste beweging = één undo-stap
     greep.verplaatst = true;
     if (greep.bestaand) snapshot();
   }
-  const p = muisPos(e);
+  const p = muisPos(puntVan(e));
 
   if (greep.soort === "sleep") {
     const v = greep.verschil || { dx: 0, dy: 0 };
@@ -266,11 +271,24 @@ window.addEventListener("pointermove", e => {
     greep.it.h = Math.max(1, p.y - greep.start.y);
   }
   renderBord();
-});
+}
 
 const stopGreep = () => (greep = null);
-window.addEventListener("pointerup", stopGreep);
-window.addEventListener("pointercancel", stopGreep);
+
+/* Aanmelden. Pointer-events zijn de moderne manier (iPadOS 13 en nieuwer,
+   en elke laptop). Een oudere iPad kent ze niet; daar vangen we de vinger
+   met touch-events, zodat tekenen daar net zo goed werkt. */
+if (window.PointerEvent) {
+  PITCH.addEventListener("pointerdown", startOp);
+  window.addEventListener("pointermove", beweegOp);
+  window.addEventListener("pointerup", stopGreep);
+  window.addEventListener("pointercancel", stopGreep);
+} else {
+  PITCH.addEventListener("touchstart", startOp, { passive: false });
+  window.addEventListener("touchmove", beweegOp, { passive: false });
+  window.addEventListener("touchend", stopGreep);
+  window.addEventListener("touchcancel", stopGreep);
+}
 
 /* Alle bordknoppen in één keer koppelen (data-tool="speler-rood", "undo", …) */
 document.querySelectorAll("[data-tool]").forEach(knop => knop.addEventListener("click", () => {

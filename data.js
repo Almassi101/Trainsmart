@@ -22,7 +22,12 @@ function laad(sleutel, standaard) {
   try { return JSON.parse(localStorage.getItem(sleutel)) ?? standaard; }
   catch { return standaard; }
 }
-function bewaar(sleutel, waarde) { localStorage.setItem(sleutel, JSON.stringify(waarde)); }
+function bewaar(sleutel, waarde) {
+  localStorage.setItem(sleutel, JSON.stringify(waarde));
+  /* Ook naar Supabase sturen, zodat je het op je iPad terugziet.
+     Dat gebeurt in online.js; zonder internet blijft het hier lokaal. */
+  if (typeof bewaarOnline === "function") bewaarOnline();
+}
 
 /* De drie lijsten die de hele app gebruikt */
 let oefeningen = laad(LAGEN.oefeningen, []);
@@ -78,5 +83,21 @@ function telMateriaal(items) {
    Ja  → de app is ALLEEN BEKIJKEN: geen tekenen, geen plannen.
    Nee → laptop/tablet: alles mag (ook met een vinger, zie board.js).
    De bijbehorende opmaak staat onderin style.css bij
-   "Telefoon: alleen bekijken". */
-const isTelefoon = () => matchMedia("(max-width: 520px)").matches;
+   "Telefoon: alleen bekijken".
+
+   Let op: een iPad kan óók smaller dan 520px zijn, bijvoorbeeld als Safari
+   in Split View naast een andere app staat. Daarom kan de gebruiker met de
+   knop "Toch ontwerpen" de blokkade voor dit apparaat uitzetten; die keuze
+   wordt onthouden. */
+const KLEIN_SLEUTEL = "trainsmart_ontwerp_klein";
+const ontwerpKleinAan = () => localStorage.getItem(KLEIN_SLEUTEL) === "ja";
+
+const isTelefoon = () => matchMedia("(max-width: 520px)").matches && !ontwerpKleinAan();
+
+/* Aanzetten/uitzetten van ontwerpen op een smal scherm.
+   De klasse op <body> laat de opmaak meeschakelen (style.css). */
+function zetOntwerpKlein(aan) {
+  localStorage.setItem(KLEIN_SLEUTEL, aan ? "ja" : "nee");
+  document.body.classList.toggle("ontwerp-klein", aan);
+}
+document.body.classList.toggle("ontwerp-klein", ontwerpKleinAan());
