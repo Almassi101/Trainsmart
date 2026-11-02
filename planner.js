@@ -23,6 +23,9 @@ function renderPlanner() {
   document.getElementById("weekLabel").textContent =
     ["Vorige week", "Deze week", "Volgende week"][weekOffset + 1] || `${fmt.format(start)} – ${fmt.format(eind)}`;
 
+  /* De knop "Deze week" heeft geen zin als je al bij deze week staat */
+  document.getElementById("weekToday").hidden = weekOffset === 0;
+
   const grid = document.getElementById("weekGrid");
   grid.innerHTML = "";
   for (let i = 0; i < 7; i++) {
@@ -66,7 +69,10 @@ function maakKaart(oef, datum, entry) {
   kaart.draggable = true;
   kaart.dataset.fase = entry.fase;               // kleurstreep per fase (style.css)
   const faseOpties = FASES.map(f => `<option ${f === entry.fase ? "selected" : ""}>${f}</option>`).join("");
-  kaart.innerHTML = `<h4>${oef.naam}</h4>
+  kaart.innerHTML = `<div class="kaartkop">
+      <h4>${oef.naam}</h4>
+      <span class="sleepgreep" title="Sleep dit kaartje naar een andere dag" aria-hidden="true">⠿</span>
+    </div>
     ${oef.doel ? `<div class="doel">${oef.doel}</div>` : ""}
     <div class="mat">${materiaalIcoontjes(oef)}</div>
     <div class="kmeta">
@@ -107,6 +113,64 @@ document.getElementById("weekPrev").onclick  = () => { weekOffset--; renderPlann
 document.getElementById("weekNext").onclick  = () => { weekOffset++; renderPlanner(); };
 document.getElementById("weekToday").onclick = () => { weekOffset = 0; renderPlanner(); };
 
+/* ---------- Inplannen met tikken (tablet en telefoon) ----------
+   Slepen werkt alleen met een muis. Daarom kun je met “📅 Inplannen”
+   een dag kiezen uit de week die je bekijkt; dat werkt met een vinger. */
+let dagKiezerOef = null;      // de oefening die je wilt inplannen
+let dagKiezerWeek = 0;        // welke week de kiezer toont
+const dagKiezerEl = document.getElementById("dagKiezer");
+
+function openDagKiezer(oef) {
+  dagKiezerOef = oef;
+  dagKiezerWeek = weekOffset;
+  dagKiezerEl.hidden = false;
+  tekenDagKiezer();
+}
+
+function sluitDagKiezer() {
+  dagKiezerEl.hidden = true;
+  dagKiezerOef = null;
+}
+
+function tekenDagKiezer() {
+  const start = maandagVan(dagKiezerWeek);
+  const eind = new Date(start); eind.setDate(eind.getDate() + 6);
+  document.getElementById("dagKiezerOef").textContent = dagKiezerOef
+    ? `“${dagKiezerOef.naam}” · ${fmt.format(start)} – ${fmt.format(eind)}`
+    : "";
+
+  const vak = document.getElementById("dagKiezerDagen");
+  vak.innerHTML = "";
+  for (let i = 0; i < 7; i++) {
+    const datum = new Date(start); datum.setDate(datum.getDate() + i);
+    const sleutel = fmtDate(datum);
+    const dagknop = document.createElement("button");
+    dagknop.type = "button";
+    dagknop.className = "dagknop" + (fmtDate(new Date()) === sleutel ? " is-vandaag" : "");
+    dagknop.innerHTML = `<strong>${DAGEN[i].slice(0, 2)}</strong><span>${fmt.format(datum)}</span>`;
+    dagknop.addEventListener("click", () => planOpDag(sleutel));
+    vak.appendChild(dagknop);
+  }
+}
+
+/* De gekozen dag: oefening erbij zetten (als “Kern”, net als bij slepen) */
+function planOpDag(sleutel) {
+  if (!dagKiezerOef) return;
+  (planning[sleutel] = planning[sleutel] || []).push({ id: dagKiezerOef.id, fase: "Kern" });
+  bewaar(LAGEN.planning, planning);
+  weekOffset = dagKiezerWeek;                 // meteen de juiste week laten zien
+  renderPlanner();
+  sluitDagKiezer();
+  document.querySelector(`.day[data-datum="${sleutel}"]`)
+    ?.scrollIntoView({ block: "center", behavior: "smooth" });
+}
+
+dagKiezerEl.addEventListener("click", e => { if (e.target === dagKiezerEl) sluitDagKiezer(); });
+document.getElementById("dagKiezerSluit").onclick    = sluitDagKiezer;
+document.getElementById("dagKiezerVorige").onclick   = () => { dagKiezerWeek--; tekenDagKiezer(); };
+document.getElementById("dagKiezerVolgende").onclick = () => { dagKiezerWeek++; tekenDagKiezer(); };
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !dagKiezerEl.hidden) sluitDagKiezer(); });
+
 /* ---------- Oefeningenbibliotheek ---------- */
 function renderBibliotheek() {
   const lijst = document.getElementById("oefList");
@@ -123,19 +187,24 @@ function maakOefKaart(oef) {
   const kaart = document.createElement("div");
   kaart.className = "oefkaart";
   kaart.draggable = true;
-  kaart.innerHTML = `<h4>${oef.naam}</h4>
+  kaart.innerHTML = `<div class="kaartkop">
+      <h4>${oef.naam}</h4>
+      <span class="sleepgreep" title="Sleep mij naar een dag" aria-hidden="true">⠿</span>
+    </div>
     ${oef.doel ? `<div class="doel">${oef.doel}</div>` : ""}
     <div class="mini">${tekenMini(oef)}</div>
     <div class="duur">⏱ ${duurVan(oef)} min</div>
     <div class="mat">${materiaalIcoontjes(oef)}</div>
     <div class="oacties">
       <button class="kbtn" data-a="bekijk">👁 Bekijk / bewerk</button>
+      <button class="kbtn plan" data-a="plan">📅 Inplannen</button>
       <button class="kbtn" data-a="kopieer">📋 Kopieer</button>
       <button class="kbtn del" data-a="verwijder">✕</button>
     </div>`;
   kaart.addEventListener("dragstart", e =>
     e.dataTransfer.setData("text/plain", JSON.stringify({ oefId: oef.id })));
   knop(kaart, "bekijk",   () => bekijkOefening(oef));
+  knop(kaart, "plan",     () => openDagKiezer(oef));
   knop(kaart, "kopieer",  () => kopieerNaarDatum(oef));
   knop(kaart, "verwijder",() => {
     if (!confirm(`"${oef.naam}" echt verwijderen uit de bibliotheek?`)) return;
@@ -206,6 +275,9 @@ function kopieerNaarDatum(oef) {
 
 /* "➕ Nieuwe oefening ontwerpen" → leeg bord + naar tactiekbord-tab */
 document.getElementById("nieuweOefeningBtn").onclick = () => {
+  /* Niet stil weggooien wat nog niet is opgeslagen (bord-io.js bewaart
+     pas bij “💾 Opslaan in bibliotheek”). */
+  if (bordVuil() && !confirm("Je tekening op het bord is nog niet opgeslagen. Wil je een nieuwe oefening beginnen en de tekening weggooien?")) return;
   leegBord();
   document.getElementById("bordTitle").textContent = "Nieuwe oefening ontwerpen";
   document.getElementById("oefNaam").value = "";

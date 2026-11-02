@@ -18,8 +18,13 @@ const STIPPEL = { dribbel: true, loop: true };      // deze twee zijn gestippeld
 let tool = "select";       // welke tool actief is
 let pionKleur = "oranje";  // de kleur die de volgende pion krijgt
 let bord = [];             // alles wat op het veld staat
+let bordBasis = "[]";      // hoe het bord eruitzag toen het leeg of opgeslagen was
 let greep = null;          // wat er nu vastgepakt is
 const geschiedenis = [];   // geheugen voor "Ongedaan"
+
+/* Is er iets getekend dat nog niet in de bibliotheek staat? Pas bij
+   “💾 Opslaan in bibliotheek” (bord-io.js) wordt een bord bewaard. */
+const bordVuil = () => JSON.stringify(bord) !== bordBasis;
 
 /* Is dit een lijn, pijl of boog? */
 const isLijn = it => !!LIJNEN[it.type];
@@ -122,7 +127,7 @@ function renderBord() {
   });
   ITEMS.replaceChildren(...nodes);
 }
-function leegBord() { bord = []; renderBord(); }
+function leegBord() { bord = []; bordBasis = "[]"; renderBord(); }
 
 /* Cijfer of tekst bij een pijl/lijn/boog zetten.
    Geen browser-popup, maar een klein invoerveldje op het veld zelf:
@@ -340,3 +345,10 @@ zoekTool.addEventListener("input", () => {
 
 PITCH.dataset.tool = tool;
 renderBord();
+
+/* Sluit je het tabblad met een onopgeslagen tekening, dan waarschuwt de browser */
+window.addEventListener("beforeunload", e => {
+  if (!bordVuil()) return;
+  e.preventDefault();
+  e.returnValue = "";          // browsers tonen hierdoor hun eigen waarschuwing
+});

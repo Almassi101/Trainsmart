@@ -29,11 +29,13 @@ document.getElementById("saveOefBtn").onclick = () => {
 
 /* 👁 Oefening terug op het bord zetten (bekijken/bewerken) */
 function bekijkOefening(oef) {
+  if (bordVuil() && !confirm("Je tekening op het bord is nog niet opgeslagen. Wil je die weggooien en deze oefening openen?")) return;
   wisselTab("bord");
   document.getElementById("bordTitle").textContent = `👁 ${oef.naam}`;
   document.getElementById("oefNaam").value = oef.naam;
   document.getElementById("oefInfo").value = oef.doel || "";
   document.getElementById("oefDuur").value = duurVan(oef);
   bord = JSON.parse(JSON.stringify(oef.bord?.items || []));   // kopie, zodat origineel veilig blijft
+  bordBasis = JSON.stringify(bord);                           // dít is de opgeslagen versie
   renderBord();
 }

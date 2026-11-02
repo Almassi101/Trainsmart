@@ -98,6 +98,13 @@ input:focus, select:focus { border-color: var(--blue); }
 .kaart .doel, .oefkaart .doel { font-size: 11.5px; color: var(--muted); margin-bottom: 6px; }
 .kaart .mat, .oefkaart .mat, .architem .mat { font-size: 14px; letter-spacing: 2px; }
 
+/* Kop van een kaartje: naam + sleep-handvat (voor wie de uitleg niet leest) */
+.kaartkop { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.kaartkop h4 { flex: 1; }
+.sleepgreep { color: var(--muted); font-size: 15px; line-height: 1; letter-spacing: -1px; cursor: grab; }
+.sleepgreep:hover { color: var(--blue); }
+.kbtn.plan { color: var(--blue); border-color: rgba(47,143,232,.6); }
+
 /* Fase in de training + duur op een kaartje */
 .kmeta { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-top: 6px; }
 .kmeta .fase {
@@ -323,6 +330,7 @@ details.toolgroup[open] summary { margin-bottom: 4px; }
   .item .greep { width: 20px; height: 20px; }
   .swatch { width: 26px; height: 26px; }
   .item { -webkit-tap-highlight-color: transparent; }
+  .sleepgreep { display: none; }   /* slepen kan niet met een vinger: gebruik “📅 Inplannen” */
 }
 
 /* Het veld past zich aan de hoogte van je scherm aan, zodat je op een
@@ -331,6 +339,31 @@ details.toolgroup[open] summary { margin-bottom: 4px; }
 @media (min-width: 761px) {
   .pitchinfo, .pitch { width: min(100%, calc(var(--veldh) * 16 / 10.5)); margin-left: auto; margin-right: auto; }
 }
+
+/* ---------- Dagkiezer: inplannen met een vinger ---------- */
+.dagkiezer {
+  position: fixed; inset: 0; z-index: 40; display: flex; align-items: center; justify-content: center;
+  background: rgba(4,12,20,.72); padding: 16px;
+}
+.dagkiezer[hidden] { display: none; }
+.dagkiezer-vak {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 18px; width: min(430px, 100%); box-shadow: 0 18px 50px rgba(0,0,0,.5);
+}
+.dagkiezer-vak h3 { font-size: 16px; margin-bottom: 4px; }
+.dagkiezer-vak .hint { margin-bottom: 12px; }
+.daggrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.dagknop {
+  display: flex; flex-direction: column; gap: 2px; cursor: pointer; text-align: left;
+  font-family: inherit; color: var(--txt);
+  background: var(--navy2); border: 1px solid var(--line); border-radius: 10px; padding: 9px 11px;
+}
+.dagknop:hover, .dagknop:focus { border-color: var(--blue); }
+.dagknop strong { font-size: 13px; }
+.dagknop span { font-size: 11.5px; color: var(--muted); }
+.dagknop.is-vandaag { border-color: var(--blue); }
+.dagknop.is-vandaag strong { color: var(--blue); }
+.dagkiezer-voet { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
 
 /* ---------- Voet (naam van ons team) ---------- */
 .footer {
@@ -388,7 +421,8 @@ details.toolgroup[open] summary { margin-bottom: 4px; }
   /* Ook de wijzig-knoppen gaan weg: afronden, kopiëren en verwijderen
      kan op telefoon niet. Alleen "👁 Bekijk" blijft over. */
   .kbtn[data-a="klaar"], .kbtn[data-a="verwijder"],
-  .kbtn[data-a="kopieer"], .kbtn[data-a="herhaal"] { display: none; }
+  .kbtn[data-a="plan"], .kbtn[data-a="kopieer"],
+  .kbtn[data-a="herhaal"] { display: none; }
 }
 
 /* ---------- Toch ontwerpen op een smal scherm ----------
@@ -401,6 +435,7 @@ body.ontwerp-klein .opslaanvak { display: flex; }
 body.ontwerp-klein #nieuweOefeningBtn { display: inline-block; }
 body.ontwerp-klein .kbtn[data-a="klaar"],
 body.ontwerp-klein .kbtn[data-a="verwijder"],
+body.ontwerp-klein .kbtn[data-a="plan"],
 body.ontwerp-klein .kbtn[data-a="kopieer"],
 body.ontwerp-klein .kbtn[data-a="herhaal"] { display: inline-block; }
 body.ontwerp-klein .pitch { touch-action: none; }

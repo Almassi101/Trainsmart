@@ -59,7 +59,7 @@
 
     <section class="bibsec">
       <h2>📚 Oefeningenbibliotheek</h2>
-      <p class="hint">Sleep een oefening naar een dag hierboven en kies daar de fase (warming-up, kern, partijvorm, afsluiting). Met “Kopieer” zet je hem meteen in een nieuwe week.</p>
+      <p class="hint">Sleep een oefening naar een dag hierboven en kies daar de fase (warming-up, kern, partijvorm, afsluiting). Op een tablet werkt slepen niet: tik dan op “📅 Inplannen” en kies de dag. Met “Kopieer” zet je hem meteen in een nieuwe week.</p>
       <div id="oefList" class="oeflist"></div>
     </section>
   </main>
@@ -202,6 +202,22 @@
     </div>
     <div id="archList" class="archlist"></div>
   </main>
+
+  <!-- ============ DAGKIEZER: inplannen met een vinger ============
+       Slepen werkt alleen met een muis. Op een tablet kies je de dag
+       hiermee (de code staat in planner.js). -->
+  <div id="dagKiezer" class="dagkiezer" hidden>
+    <div class="dagkiezer-vak" role="dialog" aria-modal="true" aria-labelledby="dagKiezerTitel">
+      <h3 id="dagKiezerTitel">Op welke dag komt deze oefening?</h3>
+      <p id="dagKiezerOef" class="hint"></p>
+      <div id="dagKiezerDagen" class="daggrid"></div>
+      <div class="dagkiezer-voet">
+        <button id="dagKiezerVorige" class="btn ghost small" type="button">‹ Vorige week</button>
+        <button id="dagKiezerVolgende" class="btn ghost small" type="button">Volgende week ›</button>
+        <button id="dagKiezerSluit" class="btn ghost small" type="button">Annuleren</button>
+      </div>
+    </div>
+  </div>
 
   <!-- ============ VOET: wie de app gemaakt heeft ============ -->
   <footer class="footer">
