@@ -1,29 +1,29 @@
 /* ============================================================
-   planner.js — DE PLANNER + BIBLIOTHEEK (US1, US3, US6)
-   Links: de week (maandag t/m zondag). Onderaan: de
-   oefeningenbibliotheek. Oefeningen sleep je naar een dag.
+   planner.js — THE PLANNER + LIBRARY (US1, US3, US6)
+   Left: the week (Monday to Sunday). Below: the
+   exercise library. You drag exercises onto a day.
    ============================================================ */
 
 const DAGEN = ["Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag", "Zondag"];
-let weekOffset = 0;   // 0 = deze week, -1 vorige, +1 volgende
+let weekOffset = 0;   // 0 = this week, -1 previous, +1 next
 const fmt = new Intl.DateTimeFormat("nl-NL", { day: "numeric", month: "long" });
 
-/* Alle trainingskaartjes van één dag ophalen: { entry, oef } */
+/* Get all training cards of one day: { entry, oef } */
 function dagKaarten(sleutel) {
   return (planning[sleutel] || [])
     .map(entry => ({ entry, oef: oefeningen.find(o => o.id === entry.id) }))
     .filter(x => x.oef)
-    .sort((a, b) => FASES.indexOf(a.entry.fase) - FASES.indexOf(b.entry.fase));   // opbouw van de training
+    .sort((a, b) => FASES.indexOf(a.entry.fase) - FASES.indexOf(b.entry.fase));   // order of the training
 }
 
-/* ---------- De week tekenen ---------- */
+/* ---------- Draw the week ---------- */
 function renderPlanner() {
   const start = maandagVan(weekOffset);
   const eind = new Date(start); eind.setDate(eind.getDate() + 6);
   document.getElementById("weekLabel").textContent =
     ["Vorige week", "Deze week", "Volgende week"][weekOffset + 1] || `${fmt.format(start)} – ${fmt.format(eind)}`;
 
-  /* De knop "Deze week" heeft geen zin als je al bij deze week staat */
+  /* The "This week" button is pointless when you are already on this week */
   document.getElementById("weekToday").hidden = weekOffset === 0;
 
   const grid = document.getElementById("weekGrid");
@@ -45,15 +45,15 @@ function renderPlanner() {
     const body = dag.querySelector(".daybody");
     kaarten.forEach(({ entry, oef }) => body.appendChild(maakKaart(oef, sleutel, entry)));
 
-    /* Sleep een oefening hierheen */
+    /* Drag an exercise here */
     dag.addEventListener("dragover", e => { e.preventDefault(); dag.classList.add("drop"); });
     dag.addEventListener("dragleave", () => dag.classList.remove("drop"));
     dag.addEventListener("drop", e => {
       e.preventDefault(); dag.classList.remove("drop");
-      if (isTelefoon()) return;                    // telefoon = alleen bekijken
+      if (isTelefoon()) return;                    // phone = view only
       const data = JSON.parse(e.dataTransfer.getData("text/plain"));
       if (data.van && Array.isArray(planning[data.van]) && data.index >= 0)
-        planning[data.van].splice(data.index, 1);                       // verplaatsen
+        planning[data.van].splice(data.index, 1);                       // move it
       (planning[sleutel] = planning[sleutel] || []).push({ id: data.oefId, fase: data.fase || "Kern" });
       bewaar(LAGEN.planning, planning);
       renderPlanner();
@@ -62,12 +62,12 @@ function renderPlanner() {
   }
 }
 
-/* Een trainingskaartje op een dag, met zijn fase in de training */
+/* A training card on a day, with its phase in the training */
 function maakKaart(oef, datum, entry) {
   const kaart = document.createElement("div");
   kaart.className = "kaart";
   kaart.draggable = true;
-  kaart.dataset.fase = entry.fase;               // kleurstreep per fase (style.css)
+  kaart.dataset.fase = entry.fase;               // colour stripe per phase (style.css)
   const faseOpties = FASES.map(f => `<option ${f === entry.fase ? "selected" : ""}>${f}</option>`).join("");
   kaart.innerHTML = `<div class="kaartkop">
       <h4>${oef.naam}</h4>
@@ -92,7 +92,7 @@ function maakKaart(oef, datum, entry) {
   kaart.querySelector('[data-a="fase"]').addEventListener("change", e => {
     entry.fase = e.target.value;
     bewaar(LAGEN.planning, planning);
-    renderPlanner();              // kaartjes weer op volgorde van de training zetten
+    renderPlanner();              // put the cards back in training order
   });
   knop(kaart, "klaar",    () => zetAfgerond(oef, datum, entry));
   knop(kaart, "bekijk",   () => bekijkOefening(oef));
@@ -103,21 +103,21 @@ function maakKaart(oef, datum, entry) {
   return kaart;
 }
 
-/* Klein hulpje: knop met data-a="..." een klik geven */
+/* Small helper: give a button with data-a="..." a click handler */
 function knop(ouder, actie, fn) {
   ouder.querySelector(`[data-a="${actie}"]`).addEventListener("click", fn);
 }
 
-/* Weekknoppen ‹ › en "Deze week" */
+/* Week buttons ‹ › and "This week" */
 document.getElementById("weekPrev").onclick  = () => { weekOffset--; renderPlanner(); };
 document.getElementById("weekNext").onclick  = () => { weekOffset++; renderPlanner(); };
 document.getElementById("weekToday").onclick = () => { weekOffset = 0; renderPlanner(); };
 
-/* ---------- Inplannen met tikken (tablet en telefoon) ----------
-   Slepen werkt alleen met een muis. Daarom kun je met “📅 Inplannen”
-   een dag kiezen uit de week die je bekijkt; dat werkt met een vinger. */
-let dagKiezerOef = null;      // de oefening die je wilt inplannen
-let dagKiezerWeek = 0;        // welke week de kiezer toont
+/* ---------- Schedule by tapping (tablet and phone) ----------
+   Dragging only works with a mouse. That is why “📅 Inplannen”
+   lets you pick a day in the week you are viewing; that works with a finger. */
+let dagKiezerOef = null;      // the exercise you want to schedule
+let dagKiezerWeek = 0;        // which week the picker shows
 const dagKiezerEl = document.getElementById("dagKiezer");
 
 function openDagKiezer(oef) {
@@ -153,12 +153,12 @@ function tekenDagKiezer() {
   }
 }
 
-/* De gekozen dag: oefening erbij zetten (als “Kern”, net als bij slepen) */
+/* The chosen day: add the exercise (as “Kern”, just like dragging does) */
 function planOpDag(sleutel) {
   if (!dagKiezerOef) return;
   (planning[sleutel] = planning[sleutel] || []).push({ id: dagKiezerOef.id, fase: "Kern" });
   bewaar(LAGEN.planning, planning);
-  weekOffset = dagKiezerWeek;                 // meteen de juiste week laten zien
+  weekOffset = dagKiezerWeek;                 // show the right week straight away
   renderPlanner();
   sluitDagKiezer();
   document.querySelector(`.day[data-datum="${sleutel}"]`)
@@ -171,7 +171,7 @@ document.getElementById("dagKiezerVorige").onclick   = () => { dagKiezerWeek--; 
 document.getElementById("dagKiezerVolgende").onclick = () => { dagKiezerWeek++; tekenDagKiezer(); };
 document.addEventListener("keydown", e => { if (e.key === "Escape" && !dagKiezerEl.hidden) sluitDagKiezer(); });
 
-/* ---------- Oefeningenbibliotheek ---------- */
+/* ---------- Exercise library ---------- */
 function renderBibliotheek() {
   const lijst = document.getElementById("oefList");
   if (!oefeningen.length) {
@@ -182,7 +182,7 @@ function renderBibliotheek() {
   oefeningen.forEach(oef => lijst.appendChild(maakOefKaart(oef)));
 }
 
-/* Een oefening-kaartje in de bibliotheek (met mini-voorbeeldje) */
+/* An exercise card in the library (with a small preview) */
 function maakOefKaart(oef) {
   const kaart = document.createElement("div");
   kaart.className = "oefkaart";
@@ -214,8 +214,8 @@ function maakOefKaart(oef) {
   return kaart;
 }
 
-/* Mini-voorbeeld: kleine svg met stipjes (spelers), strepen (lijnen),
-   pijlen, bogen en de cijfers/tekst die je bij een pijl zet */
+/* Small preview: an svg with dots (players), strokes (lines),
+   arrows, arcs and the numbers/text you add to an arrow */
 const escapeer = s => String(s).replace(/[&<>"']/g, c =>
   ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
@@ -234,7 +234,7 @@ function tekenMini(oef) {
     const kleur = LIJNEN[l.type] || "#fff";
     const stippel = l.type === "dribbel" || l.type === "loop" ? ' stroke-dasharray="3 2"' : "";
     let kop = "";
-    if (l.type === "pijl") {                       // klein pijlpuntje
+    if (l.type === "pijl") {                       // small arrow head
       const ux = Math.cos(l.a * Math.PI / 180), uy = Math.sin(l.a * Math.PI / 180), s = 4;
       kop = `<polygon fill="${kleur}" points="${e.x},${e.y} ${e.x - s * ux + s * 0.55 * uy},${e.y - s * uy - s * 0.55 * ux} ${e.x - s * ux - s * 0.55 * uy},${e.y - s * uy + s * 0.55 * ux}"/>`;
     }
@@ -262,7 +262,7 @@ function tekenMini(oef) {
   return `<svg viewBox="0 0 100 100" preserveAspectRatio="none">${delen}</svg>`;
 }
 
-/* US6: een oefening met één klik op een andere datum zetten */
+/* US6: put an exercise on another date with one click */
 function kopieerNaarDatum(oef) {
   const datum = prompt("Kopieer naar welke datum? (JJJJ-MM-DD)", fmtDate(maandagVan(1)));
   if (!datum) return;
@@ -273,10 +273,10 @@ function kopieerNaarDatum(oef) {
   alert(`"${oef.naam}" staat nu op ${datum}. 📅`);
 }
 
-/* "➕ Nieuwe oefening ontwerpen" → leeg bord + naar tactiekbord-tab */
+/* "➕ Nieuwe oefening ontwerpen" → empty board + go to the tactics board tab */
 document.getElementById("nieuweOefeningBtn").onclick = () => {
-  /* Niet stil weggooien wat nog niet is opgeslagen (bord-io.js bewaart
-     pas bij “💾 Opslaan in bibliotheek”). */
+  /* Do not silently throw away work that is not saved yet (bord-io.js only
+     saves when you press “💾 Opslaan in bibliotheek”). */
   if (bordVuil() && !confirm("Je tekening op het bord is nog niet opgeslagen. Wil je een nieuwe oefening beginnen en de tekening weggooien?")) return;
   leegBord();
   document.getElementById("bordTitle").textContent = "Nieuwe oefening ontwerpen";

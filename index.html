@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TrainSmart — Ontwerp. Train. Verbeter.</title>
 
-  <!-- Opmaak staat in een apart bestand -->
+  <!-- Styles live in a separate file -->
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" href="logo.svg" type="image/svg+xml" />
 </head>
 <body>
 
-  <!-- ============ BOVENBALK: logo + tabbladen ============ -->
+  <!-- ============ TOP BAR: logo + tabs ============ -->
   <header class="topbar">
-    <!-- Klik op het logo = terug naar de homepage (de planner) -->
+    <!-- Clicking the logo = back to the home page (the planner) -->
     <a class="brand" href="#planner" id="logoLink">
       <img class="logo" src="logo.svg" alt="TrainSmart logo" />
       <div>
@@ -26,11 +26,11 @@
       <button class="tab" data-tab="bord">✏️ Tactiekbord</button>
       <button class="tab" data-tab="archief">🗂️ Archief</button>
     </nav>
-    <!-- Laat zien of je gegevens met Supabase worden gedeeld (online.js) -->
+    <!-- Shows whether your data is shared with Supabase (online.js) -->
     <span id="onlineStand" class="online-stand uit">☁️ Online</span>
   </header>
 
-  <!-- ============ SCHERM 1: PLANNER (US1) ============ -->
+  <!-- ============ SCREEN 1: PLANNER (US1) ============ -->
   <main id="planner" class="view active">
     <section class="hero">
       <div>
@@ -54,7 +54,7 @@
       </div>
     </section>
 
-    <!-- De 7 dagen worden door planner.js ingevuld -->
+    <!-- The 7 days are filled in by planner.js -->
     <section id="weekGrid" class="weekgrid"></section>
 
     <section class="bibsec">
@@ -64,10 +64,10 @@
     </section>
   </main>
 
-  <!-- ============ SCHERM 2: TACTIEKBORD (US2 + US3) ============ -->
+  <!-- ============ SCREEN 2: TACTICS BOARD (US2 + US3) ============ -->
   <main id="bord" class="view">
 
-    <!-- Bovenaan: naam, doel en opslaan — altijd in beeld -->
+    <!-- At the top: name, goal and save — always in view -->
     <section class="bordhead">
       <div class="bordhead-tekst">
         <h2>Tactiekbord</h2>
@@ -92,14 +92,14 @@
 
     <div class="bordwrap">
 
-      <!-- Linkerkant: gereedschap, van boven naar beneden -->
+      <!-- Left side: tools, from top to bottom -->
       <aside class="toolbox">
         <div class="zoekvak">
           <input id="zoekTool" type="search" placeholder="🔍 Zoek gereedschap…" aria-label="Zoek gereedschap" />
         </div>
         <p id="geenTool" class="hint" hidden>Niets gevonden — probeer een andere naam.</p>
 
-        <!-- 1. Spelers -->
+        <!-- 1. Players -->
         <div class="toolgroup">
           <h3>Spelers</h3>
           <div class="toolgrid">
@@ -110,7 +110,7 @@
           </div>
         </div>
 
-        <!-- 2. Materiaal (uitklapbaar, want dat gebruik je minder vaak) -->
+        <!-- 2. Equipment (collapsible, because you use it less often) -->
         <details class="toolgroup">
           <summary>Materiaal</summary>
           <div class="toolgrid">
@@ -140,11 +140,11 @@
         </details>
       </aside>
 
-      <!-- Rechterkant: het voetbalveld -->
+      <!-- Right side: the pitch -->
       <div class="pitchwrap">
-        <!-- Wordt zichtbaar op een telefoon of een smal venster (zie style.css onderaan).
-             Met de knop erin kun je alsnog ontwerpen, bijvoorbeeld op een iPad
-             die te smal is omdat er een andere app naast openstaat. -->
+        <!-- Shown on a phone or in a narrow window (see the bottom of style.css).
+             The button inside lets you design anyway, for example on an iPad
+             that is too narrow because another app is open next to it. -->
         <div class="telefoon-melding">
           <span id="kleinMeldingTekst">📱 Alleen bekijken op een smal scherm — tekenen en plannen doe je op laptop of tablet 💻</span>
           <button id="ontwerpKleinBtn" class="btn ghost small" type="button">✏️ Toch ontwerpen</button>
@@ -154,18 +154,18 @@
           <div class="legend" id="materiaalLijst"></div>
         </div>
         <div id="pitch" class="pitch">
-          <!-- Vaste veldmarkering -->
+          <!-- Fixed pitch markings -->
           <div class="mid"></div>
           <div class="circle"></div>
           <div class="goal top"></div>
           <div class="goal bottom"></div>
-          <!-- Getekende lijnen en geplaatste items (door board.js) -->
+          <!-- Drawn lines and placed items (by board.js) -->
           <div id="items"></div>
         </div>
         <p class="hint center">Kies een gereedschap en klik of sleep op het veld (muis of vinger). “Selecteer” verplaatst iets, “🏷️” zet tekst bij een pijl en “🧽” haalt één onderdeel weg. Onder “Pion” kies je de kleur — klik met de pion-tool op een bestaande pion om hem te herkleuren.</p>
       </div>
 
-      <!-- Rechterkolom: de acties (tekenen, verplaatsen, weghalen) -->
+      <!-- Right column: the actions (draw, move, remove) -->
       <aside class="acties" aria-label="Acties op het veld">
         <div class="toolgroup">
           <h3>Acties</h3>
@@ -188,7 +188,7 @@
     </div>
   </main>
 
-  <!-- ============ SCHERM 3: ARCHIEF (US5) ============ -->
+  <!-- ============ SCREEN 3: ARCHIVE (US5) ============ -->
   <main id="archief" class="view">
     <h2>🗂️ Archief — uitgevoerde trainingen</h2>
     <div class="archbar">
@@ -203,9 +203,9 @@
     <div id="archList" class="archlist"></div>
   </main>
 
-  <!-- ============ DAGKIEZER: inplannen met een vinger ============
-       Slepen werkt alleen met een muis. Op een tablet kies je de dag
-       hiermee (de code staat in planner.js). -->
+  <!-- ============ DAY PICKER: schedule with a finger ============
+       Dragging only works with a mouse. On a tablet you pick the day
+       with this (the code lives in planner.js). -->
   <div id="dagKiezer" class="dagkiezer" hidden>
     <div class="dagkiezer-vak" role="dialog" aria-modal="true" aria-labelledby="dagKiezerTitel">
       <h3 id="dagKiezerTitel">Op welke dag komt deze oefening?</h3>
@@ -219,22 +219,22 @@
     </div>
   </div>
 
-  <!-- ============ VOET: wie de app gemaakt heeft ============ -->
+  <!-- ============ FOOTER: who built the app ============ -->
   <footer class="footer">
     <p>🚀 <strong>Gilde DevOps Solution</strong> — Ahmed & Eliyah </p>
   </footer>
 
-  <!-- ============ DE SCRIPTS, in de juiste volgorde ============
-       Elk onderdeel van de app heeft zijn eigen bestand:
-       1. data.js     → opslag (het geheugen)
-       2. board.js    → het tactiekbord (tekentool)
-       3. planner.js  → weekplanner + oefeningenbibliotheek
-       4. bord-io.js  → oefeningen opslaan/bekijken
-       5. archief.js  → het archief
-       6. app.js      → start de app + tabbladen
-       7. online.js   → dezelfde gegevens op laptop en iPad (Supabase) -->
+  <!-- ============ THE SCRIPTS, in the right order ============
+       Every part of the app has its own file:
+       1. data.js     → storage (the memory)
+       2. board.js    → the tactics board (drawing tool)
+       3. planner.js  → week planner + exercise library
+       4. bord-io.js  → saving/viewing exercises
+       5. archief.js  → the archive
+       6. app.js      → starts the app + tabs
+       7. online.js   → the same data on laptop and iPad (Supabase) -->
 
-  <!-- Supabase-bibliotheek (voor het delen tussen apparaten) -->
+  <!-- Supabase library (for sharing between devices) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="data.js"></script>
   <script src="board.js"></script>

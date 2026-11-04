@@ -1,25 +1,25 @@
 /* ============================================================
-   archief.js — HET ARCHIEF (US5 + US6)
-   "✔ Afgerond" in de planner vraagt hoe het ging en zet de
-   training hier in het archief. Zoekbalk + filter + kopiëren.
+   archief.js — THE ARCHIVE (US5 + US6)
+   "✔ Afgerond" in the planner asks how it went and puts the
+   training here in the archive. Search bar + filter + copy.
    ============================================================ */
 
 const BADGE = { goed: "👍", matig: "😐", slecht: "👎" };
 
-/* US5: training afronden → vraag resultaat → naar archief */
+/* US5: finish a training → ask for the result → move to the archive */
 function zetAfgerond(oef, datum, entry) {
   const antwoord = (prompt(`Hoe ging "${oef.naam}" op ${datum}?\nTyp: goed / matig / slecht`, "goed") || "").toLowerCase().trim();
   if (!BADGE[antwoord]) return alert("Vul goed, matig of slecht in.");
 
   archief.push({ id: Date.now(), naam: oef.naam, doel: oef.doel || "", datum, resultaat: antwoord, materiaal: oef.materiaal || {} });
   bewaar(LAGEN.archief, archief);
-  planning[datum] = (planning[datum] || []).filter(e => e !== entry);   // uit de planner weg
+  planning[datum] = (planning[datum] || []).filter(e => e !== entry);   // remove it from the planner
   bewaar(LAGEN.planning, planning);
   renderPlanner();
   renderArchief();
 }
 
-/* Het archief tekenen (met zoeken + filter) */
+/* Draw the archive (with search + filter) */
 function renderArchief() {
   const zoek = document.getElementById("zoekArchief").value.toLowerCase();
   const filter = document.getElementById("filterArchief").value;
@@ -27,7 +27,7 @@ function renderArchief() {
   const treffers = archief
     .filter(a => (!filter || a.resultaat === filter) &&
                  (!zoek || `${a.naam} ${a.doel} ${a.datum}`.toLowerCase().includes(zoek)))
-    .sort((a, b) => b.datum.localeCompare(a.datum));   // nieuwste bovenaan
+    .sort((a, b) => b.datum.localeCompare(a.datum));   // newest on top
 
   const lijst = document.getElementById("archList");
   if (!treffers.length) {
@@ -47,7 +47,7 @@ function renderArchief() {
       <button class="kbtn del" data-a="verwijder">✕</button>`;
 
     knop(el, "herhaal", () => {
-      /* Oefening bestaat niet meer? Dan eerst terug in de bibliotheek zetten. */
+      /* Exercise no longer exists? Then put it back in the library first. */
       let oef = oefeningen.find(o => o.naam === a.naam);
       if (!oef) {
         oef = { id: Date.now(), naam: a.naam, doel: a.doel, materiaal: a.materiaal || {}, bord: { items: [] }, gemaakt: a.datum };

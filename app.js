@@ -1,11 +1,11 @@
 /* ============================================================
-   app.js — START + TABBLADEN
-   Piepklein bestandje: regelt alleen de drie tabs bovenin en
-   start de app op. De echte functies staan in de andere
-   bestanden (zie de uitleg onderaan index.html).
+   app.js — START + TABS
+   A tiny file: it only handles the three tabs at the top and
+   starts the app. The real features live in the other files
+   (see the notes at the bottom of index.html).
    ============================================================ */
 
-/* Tabbladen: toon het gekozen scherm, verberg de rest */
+/* Tabs: show the chosen screen, hide the rest */
 function wisselTab(naam) {
   document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.tab === naam));
   document.querySelectorAll(".view").forEach(v => v.classList.toggle("active", v.id === naam));
@@ -13,14 +13,14 @@ function wisselTab(naam) {
 
 document.querySelectorAll(".tab").forEach(tab => tab.addEventListener("click", () => wisselTab(tab.dataset.tab)));
 
-/* Klik op het logo = naar de homepage (de planner) */
+/* Clicking the logo = go to the home page (the planner) */
 document.getElementById("logoLink").addEventListener("click", e => {
-  e.preventDefault();            // niet echt naar #planner springen
+  e.preventDefault();            // do not actually jump to #planner
   wisselTab("planner");
 });
 
-/* Klein scherm (telefoon of iPad in Split View): knop om tóch te ontwerpen.
-   Zonder deze knop zou je op zo'n smal scherm alleen kunnen kijken. */
+/* Small screen (phone or iPad in Split View): a button to design anyway.
+   Without it, such a narrow screen would be view only. */
 const ontwerpKleinBtn = document.getElementById("ontwerpKleinBtn");
 function toonKleinStand() {
   const aan = ontwerpKleinAan();
@@ -36,7 +36,7 @@ ontwerpKleinBtn.addEventListener("click", () => {
 });
 toonKleinStand();
 
-/* Start! Alles tekenen bj het openen van de app */
+/* Start! Draw everything when the app opens */
 renderPlanner();
 renderBibliotheek();
 renderArchief();

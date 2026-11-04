@@ -1,9 +1,9 @@
 /* ============================================================
-   bord-io.js — OPSLAAN & BEKIJKEN VAN OEFENINGEN (US2 + US3)
-   De brug tussen het tactiekbord en de bibliotheek.
+   bord-io.js — SAVING & VIEWING EXERCISES (US2 + US3)
+   The bridge between the tactics board and the library.
    ============================================================ */
 
-/* 💾 Oefening opslaan: bord + materiaal-telling gaan de bibliotheek in */
+/* 💾 Save exercise: the board + the equipment count go into the library */
 document.getElementById("saveOefBtn").onclick = () => {
   const naam = document.getElementById("oefNaam").value.trim();
   if (!naam) return alert("Geef de oefening eerst een naam!");
@@ -12,7 +12,7 @@ document.getElementById("saveOefBtn").onclick = () => {
 
   const data = { naam, doel, duur, materiaal: telMateriaal(bord), bord: { items: bord } };
 
-  /* Zelfde naam = bewerken, nieuwe naam = erbij */
+  /* Same name = edit, new name = add */
   const bestaande = oefeningen.find(o => o.naam === naam);
   bestaande ? Object.assign(bestaande, data) : oefeningen.push({ id: Date.now(), gemaakt: fmtDate(new Date()), ...data });
   bewaar(LAGEN.oefeningen, oefeningen);
@@ -27,7 +27,7 @@ document.getElementById("saveOefBtn").onclick = () => {
   alert(`Oefening "${naam}" opgeslagen. Je vindt haar terug in de bibliotheek.`);
 };
 
-/* 👁 Oefening terug op het bord zetten (bekijken/bewerken) */
+/* 👁 Put an exercise back on the board (view/edit) */
 function bekijkOefening(oef) {
   if (bordVuil() && !confirm("Je tekening op het bord is nog niet opgeslagen. Wil je die weggooien en deze oefening openen?")) return;
   wisselTab("bord");
@@ -35,7 +35,7 @@ function bekijkOefening(oef) {
   document.getElementById("oefNaam").value = oef.naam;
   document.getElementById("oefInfo").value = oef.doel || "";
   document.getElementById("oefDuur").value = duurVan(oef);
-  bord = JSON.parse(JSON.stringify(oef.bord?.items || []));   // kopie, zodat origineel veilig blijft
-  bordBasis = JSON.stringify(bord);                           // dít is de opgeslagen versie
+  bord = JSON.parse(JSON.stringify(oef.bord?.items || []));   // a copy, so the original stays safe
+  bordBasis = JSON.stringify(bord);                           // this is the saved version
   renderBord();
 }

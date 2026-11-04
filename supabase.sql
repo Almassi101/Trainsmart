@@ -1,16 +1,16 @@
 -- ============================================================
--- TrainSmart — tabel voor de gedeelde werkruimte (Supabase)
--- Plak dit één keer in Supabase → SQL Editor → New query → Run.
+-- TrainSmart — table for the shared workspace (Supabase)
+-- Paste this once into Supabase → SQL Editor → New query → Run.
 -- ============================================================
 
--- Eén rij met alle oefeningen, de planning en het archief erin.
+-- One row holding all exercises, the schedule and the archive.
 create table if not exists public.werkruimte (
   id         text primary key,
   inhoud     jsonb not null default '{}'::jsonb,
   bijgewerkt timestamptz not null default now()
 );
 
--- De browser (de publieke sleutel) mag deze tabel lezen en bijwerken.
+-- The browser (the public key) may read and update this table.
 alter table public.werkruimte enable row level security;
 
 drop policy if exists "trainsmart lezen"   on public.werkruimte;

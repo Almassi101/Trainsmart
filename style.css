@@ -1,8 +1,8 @@
 /* ============================================================
-   style.css — HOE DE APP ERUITZIET (kleuren en opmaak)
+   style.css — HOW THE APP LOOKS (colours and layout)
    ============================================================ */
 
-/* Huisstijl-kleuren (overal herbruikbaar met var(...)) */
+/* Brand colours (reusable everywhere with var(...)) */
 :root {
   --navy: #0d1b2a; --navy2: #13263c; --card: #16283f;
   --blue: #2f8fe8; --blue-dk: #1f7ae0; --line: #22405f;
@@ -10,7 +10,7 @@
   --radius: 14px;
 }
 
-/* Basis */
+/* Base */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: "Inter", "Segoe UI", sans-serif;
@@ -18,7 +18,7 @@ body {
   color: var(--txt); min-height: 100vh;
 }
 
-/* ---------- Bovenbalk met logo + tabbladen ---------- */
+/* ---------- Top bar with logo + tabs ---------- */
 .topbar {
   display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;
   padding: 14px 26px; background: rgba(13,27,42,.85);
@@ -41,7 +41,7 @@ body {
 .tab:hover { color: var(--txt); border-color: var(--blue); }
 .tab.active { background: var(--blue); color: #06121f; border-color: var(--blue); }
 
-/* Klein lampje rechts in de bovenbalk: staan je gegevens online? (online.js) */
+/* Small light on the right of the top bar: is your data online? (online.js) */
 .online-stand {
   font-size: 12px; font-weight: 600; padding: 5px 11px; border-radius: 999px;
   border: 1px solid var(--line); color: var(--muted); background: rgba(22,40,63,.7);
@@ -52,7 +52,7 @@ body {
 .online-stand.fout { color: #ffb4b4; border-color: rgba(229,72,77,.6); background: rgba(229,72,77,.14); }
 .online-stand.uit { opacity: .8; }
 
-/* ---------- Algemene bouwstenen ---------- */
+/* ---------- Shared building blocks ---------- */
 .view { display: none; padding: 22px 26px 60px; max-width: 1250px; margin: 0 auto; }
 .view.active { display: block; }
 h2 { margin-bottom: 8px; font-size: 20px; }
@@ -75,7 +75,7 @@ input:focus, select:focus { border-color: var(--blue); }
 .hero { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
 .spacer { flex: 1; }
 
-/* ---------- PLANNER: weekweergave ---------- */
+/* ---------- PLANNER: week view ---------- */
 .weekbar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
 .weekbar h2 { margin: 0; min-width: 230px; text-align: center; }
 .bibsec { margin-top: 30px; }
@@ -91,21 +91,21 @@ input:focus, select:focus { border-color: var(--blue); }
 .daydate { font-size: 11.5px; color: var(--muted); }
 .daybody { padding: 10px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
 
-/* Trainingskaartje op een dag */
+/* Training card on a day */
 .kaart { background: var(--navy2); border: 1px solid var(--line); border-left: 4px solid var(--blue); border-radius: 10px; padding: 10px 12px; cursor: grab; }
 .kaart:active { cursor: grabbing; }
 .kaart h4 { font-size: 13.5px; margin-bottom: 4px; }
 .kaart .doel, .oefkaart .doel { font-size: 11.5px; color: var(--muted); margin-bottom: 6px; }
 .kaart .mat, .oefkaart .mat, .architem .mat { font-size: 14px; letter-spacing: 2px; }
 
-/* Kop van een kaartje: naam + sleep-handvat (voor wie de uitleg niet leest) */
+/* Card header: name + drag handle (for anyone who skips the explanation) */
 .kaartkop { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
 .kaartkop h4 { flex: 1; }
 .sleepgreep { color: var(--muted); font-size: 15px; line-height: 1; letter-spacing: -1px; cursor: grab; }
 .sleepgreep:hover { color: var(--blue); }
 .kbtn.plan { color: var(--blue); border-color: rgba(47,143,232,.6); }
 
-/* Fase in de training + duur op een kaartje */
+/* Phase in the training + duration on a card */
 .kmeta { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-top: 6px; }
 .kmeta .fase {
   font-family: inherit; font-size: 10.5px; font-weight: 700; padding: 2px 6px; border-radius: 6px;
@@ -113,7 +113,7 @@ input:focus, select:focus { border-color: var(--blue); }
 }
 .kmeta .fase:focus { border-color: var(--blue); }
 .kmeta .kbtn { padding: 2px 6px; font-size: 11px; }
-/* Kleurstreep links = de fase van de training */
+/* Colour stripe on the left = the phase of the training */
 .kaart[data-fase="Warming-up"] { border-left-color: #f5c542; }
 .kaart[data-fase="Kern"]       { border-left-color: var(--blue); }
 .kaart[data-fase="Partijvorm"] { border-left-color: #22c55e; }
@@ -130,7 +130,7 @@ input:focus, select:focus { border-color: var(--blue); }
 .kbtn.done { color: var(--blue); border-color: var(--blue); }
 .kbtn.del:hover { color: #ff9b9e; border-color: #e5484d; }
 
-/* ---------- BIBLIOTHEEK ---------- */
+/* ---------- LIBRARY ---------- */
 .oeflist { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; margin-top: 14px; }
 .oefkaart {
   background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
@@ -142,7 +142,7 @@ input:focus, select:focus { border-color: var(--blue); }
 .oefkaart .mini { height: 74px; border-radius: 10px; background: #17843c; border: 2px solid #e8f5ec; overflow: hidden; }
 .oefkaart .mini svg { width: 100%; height: 100%; display: block; }
 
-/* ---------- ARCHIEF ---------- */
+/* ---------- ARCHIVE ---------- */
 .archbar { display: flex; gap: 10px; margin: 12px 0 16px; flex-wrap: wrap; }
 .archbar input { flex: 1; min-width: 220px; }
 .archlist { display: flex; flex-direction: column; gap: 10px; }
@@ -155,10 +155,10 @@ input:focus, select:focus { border-color: var(--blue); }
 .architem .info strong { display: block; font-size: 14.5px; }
 .architem .info span { font-size: 12px; color: var(--muted); }
 
-/* ---------- TACTIEKBORD ---------- */
+/* ---------- TACTICS BOARD ---------- */
 #bord.view { max-width: 1500px; }
 
-/* Bovenaan: titel + naam/doel opslaan (altijd in beeld, niet scrollen) */
+/* At the top: title + name/goal save bar (always in view, no scrolling) */
 .bordhead { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
 .bordhead-tekst { flex: 0 1 260px; }
 .bordhead-tekst h2 { margin-bottom: 4px; }
@@ -170,10 +170,10 @@ input:focus, select:focus { border-color: var(--blue); }
 .opslaanveld { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 150px; }
 .opslaanveld span { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
 .opslaanveld input { width: 100%; }
-.opslaanveld-smal { flex: 0 0 108px; min-width: 96px; }   /* duur in minuten */
+.opslaanveld-smal { flex: 0 0 108px; min-width: 96px; }   /* duration in minutes */
 .opslaanvak .btn { white-space: nowrap; }
 
-/* Drie kolommen: links spelers + materiaal, midden het veld, rechts de acties */
+/* Three columns: players + equipment left, the pitch in the middle, actions right */
 .bordwrap {
   display: grid; grid-template-columns: 282px minmax(0, 1fr) 214px;
   grid-template-areas: "links veld acties";
@@ -181,12 +181,12 @@ input:focus, select:focus { border-color: var(--blue); }
 }
 .toolbox, .acties {
   display: flex; flex-direction: column; gap: 12px;
-  /* blijft staan terwijl je op het veld werkt; eigen scrollbar als het lang wordt */
+  /* stays put while you work on the pitch; its own scrollbar when it gets long */
   position: sticky; top: 86px; max-height: calc(100vh - 106px); overflow-y: auto; padding-right: 4px;
 }
 .toolbox { grid-area: links; }
 .acties  { grid-area: acties; }
-.acties .toolgrid { grid-template-columns: 1fr; }   /* één knop per regel */
+.acties .toolgrid { grid-template-columns: 1fr; }   /* one button per row */
 .toolbox::-webkit-scrollbar, .acties::-webkit-scrollbar { width: 8px; }
 .toolbox::-webkit-scrollbar-thumb, .acties::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
 .toolgroup {
@@ -208,7 +208,7 @@ input:focus, select:focus { border-color: var(--blue); }
 .tool.danger { color: #ff9b9e; }
 .tool.wide { grid-column: 1 / -1; }
 
-/* Kleurstippen onder de pion-knop */
+/* Colour dots under the cone button */
 .pionkleuren { grid-column: 1 / -1; display: flex; gap: 7px; padding: 3px 0 3px 2px; }
 .swatch {
   width: 22px; height: 22px; padding: 0; border-radius: 50%;
@@ -219,22 +219,22 @@ input:focus, select:focus { border-color: var(--blue); }
 .tool[hidden], .toolgroup[hidden] { display: none; }
 .toolbox input { width: 100%; }
 
-/* Materiaal: uitklapbaar kopje */
-details.toolgroup { display: block; }              /* geen flex, anders klapt hij niet dicht */
+/* Equipment: collapsible heading */
+details.toolgroup { display: block; }              /* not flex, otherwise it will not collapse */
 details.toolgroup summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
 details.toolgroup summary::-webkit-details-marker { display: none; }
 details.toolgroup summary::after { content: "▾"; font-size: 11px; transition: transform .15s; }
 details.toolgroup[open] summary::after { transform: rotate(180deg); }
 details.toolgroup[open] summary { margin-bottom: 4px; }
 
-/* Kleurblokjes bij de speler-knoppen (de 4 kleuren) */
+/* Colour squares next to the player buttons (the 4 colours) */
 .dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
 .dot.rood  { background: #e5484d; }
 .dot.blauw { background: #3b82f6; }
 .dot.geel  { background: #f5c542; }
 .dot.groen { background: #22c55e; }
 
-/* Het veld zelf */
+/* The pitch itself */
 .pitchwrap { grid-area: veld; min-width: 0; }
 .pitchinfo { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
 .pitch {
@@ -242,8 +242,8 @@ details.toolgroup[open] summary { margin-bottom: 4px; }
   background: repeating-linear-gradient(0deg, #1e8c46 0 60px, #1a813f 60px 120px);
   border: 3px solid #e8f5ec; border-radius: 12px;
   aspect-ratio: 16 / 10.5; width: 100%; overflow: hidden; user-select: none;
-  /* Op een iPad: geen "kopieer/opslaan"-menu of blauw flitsje als je lang op
-     het veld drukt — dat zou het tekenen blokkeren. */
+  /* On an iPad: no "copy/save" menu or blue flash when you press the pitch
+     for a while — that would block drawing. */
   -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent;
 }
 .pitch #items { position: absolute; inset: 0; }
@@ -255,8 +255,8 @@ details.toolgroup[open] summary { margin-bottom: 4px; }
 .pitch .goal.top { top: 4px; }
 .pitch .goal.bottom { bottom: 4px; }
 
-/* Geplaatste items: spelers, materiaal, lijnen en zones.
-   Maten: speler 26px · pion/vlag/etc 26px · doel 64px (2.5× pion) */
+/* Placed items: players, equipment, lines and zones.
+   Sizes: player 26px · cone/flag/etc 26px · goal 64px (2.5× the cone) */
 .item { position: absolute; transform: translate(-50%,-50%); cursor: grab; display: grid; place-items: center; font-size: 22px; line-height: 1; text-shadow: 0 1px 2px rgba(0,0,0,.5); }
 .item:active { cursor: grabbing; }
 .item.speler {
@@ -265,7 +265,7 @@ details.toolgroup[open] summary { margin-bottom: 4px; }
 }
 .item.bal { font-size: 24px; }
 .item.pion, .item.vlag, .item.hoepel, .item.ladder, .item.handschoen { width: 26px; height: 26px; }
-/* Pion = een echt kegeltje, zodat elke kleur klopt (CSS-driehoek) */
+/* Cone = a real little pyramid, so every colour looks right (CSS triangle) */
 .item.pion {
   width: 22px; height: 24px; border-radius: 2px;
   background: var(--kleur, #ff7a1a);
@@ -279,18 +279,18 @@ details.toolgroup[open] summary { margin-bottom: 4px; }
 .item.doel { width: 64px; height: 40px; font-size: 40px; }
 .item.lijn { height: 4px; border-radius: 2px; transform: rotate(0deg); transform-origin: 0 50%; }
 .item.pijl { background: var(--kleur, #ffa94d); }
-/* Pijlpunt aan het einde van een pijl */
+/* Arrow head at the end of an arrow */
 .item.pijl::after {
   content: ""; position: absolute; right: -9px; top: 50%; transform: translateY(-50%);
   width: 0; height: 0; border-top: 7px solid transparent; border-bottom: 7px solid transparent;
   border-left: 12px solid var(--kleur, #ffa94d);
 }
-/* Boog: kromme lijn die je met een vinger uitrolt */
+/* Arc: a curved line you roll out with a finger */
 .item.boog { transform-origin: 0 100%; cursor: grab; }
 .item.boog:active { cursor: grabbing; }
 .item.boog svg { width: 100%; height: 100%; display: block; overflow: visible; }
-/* Cijfer of tekst bij een pijl/lijn (blijft rechtop staan) */
-/* Invoerveldje om een cijfer of tekst bij een pijl te typen */
+/* Number or text next to an arrow/line (stays upright) */
+/* Small input field to type a number or text next to an arrow */
 .labeledit {
   position: absolute; transform: translate(-50%, -50%); z-index: 6;
   width: 120px; text-align: center; font-family: inherit;
@@ -308,8 +308,8 @@ details.toolgroup[open] summary { margin-bottom: 4px; }
 }
 .item.zone { background: rgba(126,240,178,.16); border: 2px solid #7ef0b2; border-radius: 6px; transform: none; }
 
-/* Greepje aan het eind van een lijn, boog of zone: daarmee rek je hem langer
-   of draai je hem. Alleen zichtbaar als "Selecteer" actief is. */
+/* Handle at the end of a line, arc or zone: use it to stretch or turn it.
+   Only visible while "Selecteer" is active. */
 .item .greep {
   position: absolute; display: none; z-index: 4;
   width: 15px; height: 15px; border-radius: 50%;
@@ -321,26 +321,26 @@ details.toolgroup[open] summary { margin-bottom: 4px; }
 .item.boog .greep { right: 0; bottom: 0; top: auto; transform: translate(15%, 45%); }
 .item.zone .greep { right: -8px; bottom: -8px; top: auto; transform: none; cursor: nwse-resize; }
 
-/* Op tablet/laptop: het veld vangt de vinger zelf af (niet de pagina laten scrollen) */
+/* On tablet/laptop: the pitch catches the finger itself (so the page does not scroll) */
 @media (min-width: 521px) { .pitch { touch-action: none; } }
 
-/* Vinger in plaats van muis: iets grotere grepen en kleurstippen,
-   zodat je ze op een iPad makkelijk raakt. */
+/* Finger instead of mouse: slightly bigger handles and colour dots,
+   so they are easy to hit on an iPad. */
 @media (pointer: coarse) {
   .item .greep { width: 20px; height: 20px; }
   .swatch { width: 26px; height: 26px; }
   .item { -webkit-tap-highlight-color: transparent; }
-  .sleepgreep { display: none; }   /* slepen kan niet met een vinger: gebruik “📅 Inplannen” */
+  .sleepgreep { display: none; }   /* dragging needs a mouse: use “📅 Inplannen” instead */
 }
 
-/* Het veld past zich aan de hoogte van je scherm aan, zodat je op een
-   laptop het hele veld ziet zonder te scrollen. De verhouding blijft gelijk. */
+/* The pitch adapts to your screen height, so on a laptop you see the whole
+   pitch without scrolling. The proportions stay the same. */
 #bord { --veldh: clamp(400px, calc(100vh - 250px), 720px); }
 @media (min-width: 761px) {
   .pitchinfo, .pitch { width: min(100%, calc(var(--veldh) * 16 / 10.5)); margin-left: auto; margin-right: auto; }
 }
 
-/* ---------- Dagkiezer: inplannen met een vinger ---------- */
+/* ---------- Day picker: schedule with a finger ---------- */
 .dagkiezer {
   position: fixed; inset: 0; z-index: 40; display: flex; align-items: center; justify-content: center;
   background: rgba(4,12,20,.72); padding: 16px;
@@ -365,21 +365,21 @@ details.toolgroup[open] summary { margin-bottom: 4px; }
 .dagknop.is-vandaag strong { color: var(--blue); }
 .dagkiezer-voet { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
 
-/* ---------- Voet (naam van ons team) ---------- */
+/* ---------- Footer (our team's name) ---------- */
 .footer {
   text-align: center; margin-top: 30px; padding: 22px 20px 30px;
   border-top: 1px solid var(--line); color: var(--muted); font-size: 13.5px;
 }
 .footer strong { color: var(--blue); }
 
-/* ---------- Tablet / smalle laptop ---------- */
+/* ---------- Tablet / narrow laptop ---------- */
 @media (max-width: 1180px) {
   .bordwrap { grid-template-columns: 246px minmax(0, 1fr) 198px; }
   .acties .tool { font-size: 11.5px; padding: 7px 8px; gap: 6px; }
 }
 @media (max-width: 980px) {
   .weekgrid { grid-template-columns: repeat(2, 1fr); }
-  /* Acties worden een strook boven het veld; spelers en materiaal blijven links */
+  /* Actions become a strip above the pitch; players and equipment stay left */
   .bordwrap {
     grid-template-columns: 240px minmax(0, 1fr);
     grid-template-areas: "acties acties" "links veld";
@@ -389,10 +389,10 @@ details.toolgroup[open] summary { margin-bottom: 4px; }
   .acties .tool.wide { grid-column: auto; }
   .tool { font-size: 12px; padding: 6px 8px; gap: 6px; }
   .opslaanvak { min-width: 280px; }
-  .opslaanvak .btn { flex: 1 0 100%; }        /* knop netjes op een eigen regel */
+  .opslaanvak .btn { flex: 1 0 100%; }        /* button neatly on its own row */
 }
 
-/* ---------- Nóg smaller: alles boven het veld ---------- */
+/* ---------- Even narrower: everything above the pitch ---------- */
 @media (max-width: 760px) {
   .bordwrap { grid-template-columns: 1fr; grid-template-areas: "acties" "links" "veld"; }
   .toolbox { flex-direction: row; flex-wrap: wrap; }
@@ -400,12 +400,12 @@ details.toolgroup[open] summary { margin-bottom: 4px; }
   .toolgroup { flex: 1; min-width: 230px; }
 }
 
-/* ---------- Telefoon (≤520px): ALLEEN BEKIJKEN ----------
-   Op een telefoon verdwijnen de ontwerp-gereedschappen.
-   Bekijken mag; tekenen en plannen kan op laptop of tablet.
-   De bijbehorende blokkade in de code staat in data.js (isTelefoon). */
+/* ---------- Phone (≤520px): VIEW ONLY ----------
+   On a phone the design tools disappear.
+   Viewing is fine; drawing and planning happen on laptop or tablet.
+   The matching block in the code lives in data.js (isTelefoon). */
 .telefoon-melding {
-  display: none;                          /* op pc/tablet staat hij uit */
+  display: none;                          /* off on pc/tablet */
   background: rgba(47,143,232,.12);
   border: 1px solid var(--blue);
   color: var(--txt);
@@ -414,22 +414,22 @@ details.toolgroup[open] summary { margin-bottom: 4px; }
   align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; text-align: center;
 }
 @media (max-width: 520px) {
-  .toolbox { display: none; }             /* geen tekengereedschap */
-  .opslaanvak { display: none; }          /* en geen opslaan-formulier */
-  #nieuweOefeningBtn { display: none; }   /* geen ontwerp-knop in de planner */
-  .telefoon-melding { display: flex; }    /* wel de uitleg boven het veld */
-  /* Ook de wijzig-knoppen gaan weg: afronden, kopiëren en verwijderen
-     kan op telefoon niet. Alleen "👁 Bekijk" blijft over. */
+  .toolbox { display: none; }             /* no drawing tools */
+  .opslaanvak { display: none; }          /* and no save form */
+  #nieuweOefeningBtn { display: none; }   /* no design button in the planner */
+  .telefoon-melding { display: flex; }    /* but the explanation above the pitch does */
+  /* The edit buttons go too: finishing, copying and deleting
+     are not possible on a phone. Only "👁 Bekijk" remains. */
   .kbtn[data-a="klaar"], .kbtn[data-a="verwijder"],
   .kbtn[data-a="plan"], .kbtn[data-a="kopieer"],
   .kbtn[data-a="herhaal"] { display: none; }
 }
 
-/* ---------- Toch ontwerpen op een smal scherm ----------
-   Een iPad kan smaller dan 520px zijn (Safari Split View naast een andere
-   app). Met de knop in de melding zet je het ontwerpen daar alsnog aan:
-   de klasse `ontwerp-klein` op <body> haalt de blokkade hierboven weg.
-   De code staat in data.js (isTelefoon) en app.js (de knop). */
+/* ---------- Design anyway on a narrow screen ----------
+   An iPad can be narrower than 520px (Safari Split View next to another
+   app). The button in the notice switches designing back on there:
+   the `ontwerp-klein` class on <body> removes the block above.
+   The code lives in data.js (isTelefoon) and app.js (the button). */
 body.ontwerp-klein .toolbox { display: flex; }
 body.ontwerp-klein .opslaanvak { display: flex; }
 body.ontwerp-klein #nieuweOefeningBtn { display: inline-block; }

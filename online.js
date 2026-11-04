@@ -1,27 +1,27 @@
 /* ============================================================
-   online.js — DELEN TUSSEN LAPTOP EN IPAD (Supabase)
-   De app bewaart alles in de browser (localStorage, zie data.js).
-   Dit bestand zet dezelfde gegevens ook in Supabase, zodat je op
-   je laptop én je iPad dezelfde oefeningen en planning ziet.
+   online.js — SHARING BETWEEN LAPTOP AND IPAD (Supabase)
+   The app keeps everything in the browser (localStorage, see data.js).
+   This file also puts the same data in Supabase, so you see the same
+   exercises and schedule on your laptop and your iPad.
    ============================================================ */
 
-/* 1. Je Supabase-project -------------------------------------
-   De URL vind je in Supabase → Project Settings → Data API.
-   De publieke sleutel (sb_publishable_…) mag in de code staan:
-   die is bedoeld voor de browser. De beveiliging zit in de
-   RLS-regels van de tabel (zie supabase.sql).
+/* 1. Your Supabase project -----------------------------------
+   You find the URL in Supabase → Project Settings → Data API.
+   The public key (sb_publishable_…) may sit in the code: it is
+   meant for the browser. Security lives in the RLS rules of
+   the table (see supabase.sql).
 
-   Is de URL nog niet ingevuld, dan werkt de app gewoon zoals
-   voorheen: alles lokaal op dit apparaat. */
+   If the URL is not filled in yet, the app simply works the way
+   it did before: everything local on this device. */
 const ONLINE_URL = "https://okdaoboojynsiorvbfnw.supabase.co";
 const ONLINE_KEY = "sb_publishable_15H1yiEcY_6dt0MF8WRmPw_KVTD2P1t";
 const ONLINE_TABEL = "werkruimte";
-const ONLINE_RIJ = "gedeeld";            // één gedeelde werkruimte
+const ONLINE_RIJ = "gedeeld";            // one shared workspace
 
-const onlineAan = ONLINE_URL.startsWith("https://") && !ONLINE_URL.includes("JOUW-PROJECT");   // false = nog geen project ingevuld
+const onlineAan = ONLINE_URL.startsWith("https://") && !ONLINE_URL.includes("JOUW-PROJECT");   // false = no project filled in yet
 const db = onlineAan && window.supabase ? window.supabase.createClient(ONLINE_URL, ONLINE_KEY) : null;
 
-/* 2. Het statuslampje bovenin -------------------------------- */
+/* 2. The status light at the top ------------------------------ */
 const standEl = document.getElementById("onlineStand");
 function zetStand(tekst, soort, uitleg) {
   if (!standEl) return;
@@ -30,21 +30,21 @@ function zetStand(tekst, soort, uitleg) {
   standEl.title = uitleg || tekst;
 }
 
-/* 3. Ophalen: wat online staat, komt in de app ----------------
-   Let op: een lege rij online betekent "nog niets gedeeld", niet
-   "alles wissen". Anders zou je oefeningen op je laptop verdwijnen
-   zodra je de app voor het eerst opent.                          */
+/* 3. Fetching: whatever is online ends up in the app ----------
+   Note: an empty row online means "nothing shared yet", not
+   "delete everything". Otherwise your exercises on the laptop would
+   vanish the first time you open the app.                        */
 const heeftInhoud = h => !!h && (
   (Array.isArray(h.oefeningen) && h.oefeningen.length > 0) ||
   (Array.isArray(h.archief) && h.archief.length > 0) ||
   (!!h.planning && Object.values(h.planning).some(l => Array.isArray(l) && l.length > 0))
 );
 
-let onlineOphalen = false;              // voorkomt dat we ons eigen opslaan teruglezen
+let onlineOphalen = false;              // stops us from reading back our own save
 
 async function haalOnlineOp(stil = false) {
   if (!db) {
-    /* Geen URL ingevuld, of de Supabase-bibliotheek kon niet laden (internet) */
+    /* No URL filled in, or the Supabase library could not load (internet) */
     onlineAan
       ? zetStand("⚠️ Offline", "fout", "Kon Supabase niet laden. De app werkt verder met wat lokaal staat.")
       : zetStand("💾 Alleen dit apparaat", "uit", "Vul de Supabase-URL in online.js in om te delen tussen apparaten.");
@@ -63,13 +63,13 @@ async function haalOnlineOp(stil = false) {
       if (Array.isArray(o)) oefeningen = o;
       if (p && typeof p === "object") planning = p;
       if (Array.isArray(a)) archief = a;
-      /* Ook lokaal bewaren, zodat de app zonder internet verder kan */
+      /* Save it locally too, so the app keeps working without internet */
       bewaar(LAGEN.oefeningen, oefeningen);
       bewaar(LAGEN.planning, planning);
       bewaar(LAGEN.archief, archief);
       renderPlanner(); renderBibliotheek(); renderArchief();
     } else {
-      /* Nog niets online: zet wat er nu lokaal staat als eerste versie neer */
+      /* Nothing online yet: publish whatever is local now as the first version */
       onlineOphalen = false;
       await bewaarOnline();
       return;
@@ -83,7 +83,7 @@ async function haalOnlineOp(stil = false) {
   }
 }
 
-/* 4. Opslaan: elke wijziging gaat (met een korte pauze) naar Supabase */
+/* 4. Saving: every change goes to Supabase (after a short pause) */
 let onlineTimer = null;
 let onlineBezig = false;
 
@@ -111,7 +111,7 @@ async function bewaarOnline() {
   }, 700);
 }
 
-/* 5. Start: ophalen, en opnieuw ophalen als je terugkomt in de app.
-      Zo zie je op je iPad wat je op je laptop hebt gemaakt. --------- */
+/* 5. Start: fetch, and fetch again when you come back to the app.
+      That way your iPad shows what you made on your laptop. -------- */
 haalOnlineOp();
 document.addEventListener("visibilitychange", () => { if (!document.hidden) haalOnlineOp(true); });
