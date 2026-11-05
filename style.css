@@ -75,6 +75,41 @@ input:focus, select:focus { border-color: var(--blue); }
 .hero { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
 .spacer { flex: 1; }
 
+/* ---------- Login screen (auth.js) ---------- */
+.login-scherm {
+  position: fixed; inset: 0; z-index: 200; overflow-y: auto;
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+  background: radial-gradient(1200px 600px at 80% -10%, #1c3355 0%, var(--navy) 55%);
+}
+.login-scherm[hidden] { display: none; }
+.login-kaart {
+  width: min(420px, 100%); display: flex; flex-direction: column; gap: 6px;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 26px 24px; box-shadow: 0 22px 60px rgba(0,0,0,.55);
+}
+.login-kaart .logo {
+  width: 52px; height: 52px; border-radius: 12px; margin-bottom: 6px;
+  box-shadow: 0 2px 14px rgba(47,143,232,.4);
+}
+.login-kaart h2 { font-size: 20px; }
+.login-kaart form { display: flex; flex-direction: column; gap: 12px; margin-top: 12px; }
+.login-kaart .veld { display: flex; flex-direction: column; gap: 5px; }
+.login-kaart .veld span {
+  font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted);
+}
+.login-kaart .veld input { width: 100%; padding: 10px 12px; }
+.login-kaart .btn { width: 100%; }
+.login-kaart .btn:disabled { opacity: .6; cursor: progress; }
+.login-fout {
+  background: rgba(229,72,77,.14); border: 1px solid rgba(229,72,77,.6);
+  color: #ffb4b4; border-radius: 9px; padding: 8px 11px; font-size: 12.5px;
+}
+.login-fout[hidden] { display: none; }
+.login-voet { margin-top: 14px; }
+
+/* While signed out the app behind the login screen stays put */
+body.uitgelogd { overflow: hidden; }
+
 /* ---------- PLANNER: week view ---------- */
 .weekbar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
 .weekbar h2 { margin: 0; min-width: 230px; text-align: center; }

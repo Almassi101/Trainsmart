@@ -147,9 +147,29 @@ Supabase-project, en vul in `online.js` de `ONLINE_URL` in (Project Settings →
 Data API). De publieke sleutel (`sb_publishable_…`) mag in de code staan; de
 beveiliging zit in de RLS-regels van `supabase.sql`.
 
-*Let op:* het is één gedeelde werkruimte — iedereen met de link ziet en wijzigt
-dezelfde oefeningen. Voor persoonsgegevens of aparte omgevingen per trainer is
-Supabase Auth nodig.
+*Let op:* elke trainer heeft sinds de login zijn **eigen werkruimte** in
+Supabase. De rij met id `gedeeld` van vóór de login staat er nog, maar is niet
+meer bereikbaar.
+
+### 🔐 Inloggen
+
+De app blijft achter een inlogscherm staan tot je inlogt: zonder account geeft
+Supabase geen gegevens terug. De login staat in `auth.js` en gebruikt
+**Supabase Auth** (e-mailadres + wachtwoord).
+
+Eenmalig instellen in Supabase:
+
+1. **Authentication → Providers → Email**: zet Email aan.
+2. Voor een demo is het handig om **“Confirm email” uit** te zetten; staat die
+   aan, dan moet je eerst op de link in je mailbox klikken voor je kunt inloggen.
+3. Draai de nieuwe `supabase.sql` in de **SQL Editor** — dat vervangt de oude
+   regels door regels die alleen de eigenaar toegang geven.
+4. Maak accounts aan via **Authentication → Users → Add user**, of laat iedere
+   trainer zich in de app registreren via “Nog geen account?”.
+
+De beveiliging zit in de RLS-regels: een rij is alleen leesbaar als
+`auth.uid()::text = id`, en de rij-id is het account van de trainer. Uitloggen
+kan met de knop rechtsboven; de gegevens blijven dan bewaard.
 
 ---
 
