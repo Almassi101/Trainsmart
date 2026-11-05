@@ -48,7 +48,10 @@ Verder in versie 1:
 | Datum | Commit | Wat |
 |---|---|---|
 | 4 november | `4f1caeb` | Al het codecommentaar naar het Engels, zodat de code voor iedereen leesbaar is |
-| 5 november | `f11ab72` | Login met Supabase Auth: inlogscherm, account aanmaken, uitloggen, en per trainer een eigen werkruimte met de beveiliging dicht (RLS) |
+
+Een login is tussendoor gebouwd en daarna weer verwijderd: die hoort bij de
+bespreking van versie 2 en niet bij wat er nu live staat. De app werkt voorlopig
+weer zoals in versie 1, zonder account.
 
 ### Gepland, in deze volgorde
 
@@ -105,4 +108,5 @@ Wat er technisch nog voor nodig is (plan, nog niet gebouwd):
 | Versie | Status | Commit |
 |---|---|---|
 | 1.0 | ingeleverd op 2 november 2026 | `a32fa76` |
-| 2.0 | in ontwikkeling | `4f1caeb`, `f11ab72` en verder |
+| 1.1 | commentaar naar het Engels, login weer verwijderd | `4f1caeb` |
+| 2.0 | in ontwikkeling, nog te bespreken | nog geen code |

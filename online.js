@@ -16,8 +16,8 @@
 const ONLINE_URL = "https://okdaoboojynsiorvbfnw.supabase.co";
 const ONLINE_KEY = "sb_publishable_15H1yiEcY_6dt0MF8WRmPw_KVTD2P1t";
 const ONLINE_TABEL = "werkruimte";
-/* Every trainer has their own row: the row id is the user id (auth.js),
-   so the RLS rules in supabase.sql can hand out one row per account. */
+const ONLINE_RIJ = "gedeeld";            // one shared workspace
+
 const onlineAan = ONLINE_URL.startsWith("https://") && !ONLINE_URL.includes("JOUW-PROJECT");   // false = no project filled in yet
 const db = onlineAan && window.supabase ? window.supabase.createClient(ONLINE_URL, ONLINE_KEY) : null;
 
@@ -43,11 +43,11 @@ const heeftInhoud = h => !!h && (
 let onlineOphalen = false;              // stops us from reading back our own save
 
 async function haalOnlineOp(stil = false) {
-  const user = huidigeGebruiker();        // filled in by auth.js after signing in
-  if (!db || !user) {
-    /* No URL filled in, the library did not load, or nobody is signed in yet */
-    if (!db && onlineAan)
-      zetStand("⚠️ Offline", "fout", "Kon Supabase niet laden. De app werkt verder met wat lokaal staat.");
+  if (!db) {
+    /* No URL filled in, or the Supabase library could not load (internet) */
+    onlineAan
+      ? zetStand("⚠️ Offline", "fout", "Kon Supabase niet laden. De app werkt verder met wat lokaal staat.")
+      : zetStand("💾 Alleen dit apparaat", "uit", "Vul de Supabase-URL in online.js in om te delen tussen apparaten.");
     return;
   }
   if (onlineOphalen) return;
@@ -55,7 +55,7 @@ async function haalOnlineOp(stil = false) {
   if (!stil) zetStand("☁️ Ophalen…", "bezig");
 
   try {
-    const { data, error } = await db.from(ONLINE_TABEL).select("inhoud").eq("id", user.id).maybeSingle();
+    const { data, error } = await db.from(ONLINE_TABEL).select("inhoud").eq("id", ONLINE_RIJ).maybeSingle();
     if (error) throw error;
 
     if (heeftInhoud(data?.inhoud)) {
@@ -88,8 +88,7 @@ let onlineTimer = null;
 let onlineBezig = false;
 
 async function bewaarOnline() {
-  const user = huidigeGebruiker();
-  if (!db || !user || onlineOphalen) return;
+  if (!db || onlineOphalen) return;
   clearTimeout(onlineTimer);
   zetStand("☁️ Opslaan…", "bezig");
   onlineTimer = setTimeout(async () => {
@@ -97,7 +96,7 @@ async function bewaarOnline() {
     onlineBezig = true;
     try {
       const { error } = await db.from(ONLINE_TABEL).upsert({
-        id: user.id,
+        id: ONLINE_RIJ,
         inhoud: { oefeningen, planning, archief },
         bijgewerkt: new Date().toISOString()
       });
@@ -112,9 +111,7 @@ async function bewaarOnline() {
   }, 700);
 }
 
-/* 5. Start: nothing happens here. auth.js calls haalOnlineOp() once a trainer
-      is signed in, and asks again whenever the app comes back into view, so
-      your iPad shows what you made on your laptop. ------------------- */
-document.addEventListener("visibilitychange", () => {
-  if (!document.hidden && huidigeGebruiker()) haalOnlineOp(true);
-});
+/* 5. Start: fetch, and fetch again when you come back to the app.
+      That way your iPad shows what you made on your laptop. -------- */
+haalOnlineOp();
+document.addEventListener("visibilitychange", () => { if (!document.hidden) haalOnlineOp(true); });

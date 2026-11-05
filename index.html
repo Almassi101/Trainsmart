@@ -11,33 +11,6 @@
 </head>
 <body>
 
-  <!-- ============ LOGIN SCREEN (auth.js) ============
-       The app stays behind this screen until a trainer signs in.
-       Supabase only hands out the data to a signed-in account. -->
-  <div id="loginScherm" class="login-scherm">
-    <div class="login-kaart" role="dialog" aria-modal="true" aria-labelledby="loginTitel">
-      <img class="logo" src="logo.svg" alt="" />
-      <h2 id="loginTitel">Inloggen bij TrainSmart</h2>
-      <p id="loginHint" class="hint">Log in met je e-mailadres en wachtwoord.</p>
-
-      <form id="loginForm" novalidate>
-        <label class="veld">
-          <span>E-mailadres</span>
-          <input id="loginEmail" type="email" autocomplete="email" placeholder="trainer@club.nl" />
-        </label>
-        <label class="veld">
-          <span>Wachtwoord</span>
-          <input id="loginWachtwoord" type="password" autocomplete="current-password" placeholder="Minstens 6 tekens" />
-        </label>
-        <p id="loginFout" class="login-fout" hidden></p>
-        <button id="loginBtn" class="btn primary" type="submit">Inloggen</button>
-        <button id="loginWissel" class="btn ghost small" type="button">Nog geen account? Maak er een aan</button>
-      </form>
-
-      <p class="hint center login-voet">Je oefeningen staan per trainer apart in Supabase.</p>
-    </div>
-  </div>
-
   <!-- ============ TOP BAR: logo + tabs ============ -->
   <header class="topbar">
     <!-- Clicking the logo = back to the home page (the planner) -->
@@ -54,9 +27,7 @@
       <button class="tab" data-tab="archief">🗂️ Archief</button>
     </nav>
     <!-- Shows whether your data is shared with Supabase (online.js) -->
-    <span id="onlineStand" class="online-stand uit">🔒 Uitgelogd</span>
-    <!-- Signed-in trainer: log out again (auth.js) -->
-    <button id="uitlogBtn" class="btn ghost small" type="button" hidden>Uitloggen</button>
+    <span id="onlineStand" class="online-stand uit">☁️ Online</span>
   </header>
 
   <!-- ============ SCREEN 1: PLANNER (US1) ============ -->
@@ -261,8 +232,7 @@
        4. bord-io.js  → saving/viewing exercises
        5. archief.js  → the archive
        6. app.js      → starts the app + tabs
-       7. online.js   → the same data on laptop and iPad (Supabase)
-       8. auth.js     → the login screen (Supabase Auth) -->
+       7. online.js   → the same data on laptop and iPad (Supabase) -->
 
   <!-- Supabase library (for sharing between devices) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -273,6 +243,5 @@
   <script src="archief.js"></script>
   <script src="app.js"></script>
   <script src="online.js"></script>
-  <script src="auth.js"></script>
 </body>
 </html>
